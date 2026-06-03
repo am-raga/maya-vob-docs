@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maya VOB Help Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#F8FAFC;--bg-elevated:#FFFFFF;--surface-soft:#F1F5F9;--border:#E2E8F0;--border-strong:#CBD5E1;
+  --text-primary:#0F172A;--text-secondary:#475569;--text-muted:#94A3B8;
+  --brand:#3B82F6;--brand-soft:#EFF6FF;--brand-text:#1E40AF;
+  --green:#10B981;--green-soft:#ECFDF5;--purple:#A855F7;--purple-soft:#FAF5FF;
+  --teal:#14B8A6;--teal-soft:#F0FDFA;--amber:#F59E0B;--amber-soft:#FFFBEB;
+  --red:#EF4444;--red-soft:#FEF2F2;
+  --shadow-sm:0 1px 2px rgba(15,23,42,.04);--shadow-md:0 4px 12px rgba(15,23,42,.06);
+  --radius-sm:8px;--radius-md:12px;--radius-lg:16px;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;--mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text-primary);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased;}
+a{color:var(--brand);text-decoration:none;}a:hover{text-decoration:underline;}
+code{font-family:var(--mono);font-size:12.5px;background:var(--surface-soft);padding:1px 6px;border-radius:4px;color:var(--text-primary);}
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;}
+.topbar-left{display:flex;align-items:center;gap:16px;}
+.brand-logo-img{height:36px;width:auto;display:block;}
+.topbar-title{font-size:15px;font-weight:700;color:var(--text-primary);padding-left:16px;border-left:1px solid var(--border);}
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:280px 1fr;max-width:1300px;margin:0 auto;}
+/* SIDEBAR */
+.sidebar{position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto;padding:28px 16px 28px 28px;border-right:1px solid var(--border);}
+.sidebar-section{margin-bottom:24px;}
+.sidebar-section-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;color:var(--text-muted);letter-spacing:.6px;text-transform:uppercase;padding:0 10px;margin-bottom:8px;}
+.sidebar-section-label .dot{width:6px;height:6px;border-radius:50%;background:var(--text-muted);}
+.sidebar-section-label.tutorial .dot{background:#3B82F6;}
+.sidebar-section-label.howto .dot{background:#10B981;}
+.sidebar-section-label.reference .dot{background:#A855F7;}
+.sidebar-section-label.explanation .dot{background:#F59E0B;}
+.sidebar-section-label.appendix .dot{background:#64748B;}
+.sidebar-link{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--radius-sm);font-size:13px;color:var(--text-secondary);text-decoration:none;font-weight:500;transition:all .15s;margin-bottom:1px;cursor:pointer;}
+.sidebar-link:hover{background:var(--surface-soft);color:var(--text-primary);}
+.sidebar-link.active{background:var(--brand-soft);color:var(--brand-text);font-weight:600;}
+.sidebar-link .article-num{font-family:var(--mono);font-size:10px;color:var(--text-muted);font-weight:600;min-width:20px;}
+.sidebar-link.active .article-num{color:var(--brand);}
+.sidebar-sublink{margin-left:26px;font-size:12.5px;padding:5px 10px;}
+.lock-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--text-muted);margin-left:auto;}
+/* COLLAPSIBLE SIDEBAR */
+.sidebar-section-label{cursor:pointer;user-select:none;}
+.sidebar-section-label .chevron{margin-left:auto;flex-shrink:0;transition:transform .2s ease;color:var(--text-muted);}
+.sidebar-section.collapsed .sidebar-section-label .chevron{transform:rotate(-90deg);}
+.sidebar-section.collapsed .sidebar-link{display:none;}
+/* MAIN */
+.main{min-width:0;}
+.main-inner{padding:44px 52px;}
+.article{display:none;}
+/* ARTICLE ELEMENTS */
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted);margin-bottom:14px;font-weight:500;}
+.breadcrumb a{color:var(--text-muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--text-primary);}
+.breadcrumb .sep{color:var(--border-strong);}
+.breadcrumb .current{color:var(--text-secondary);}
+.article-header{margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+.article-kicker{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;margin-bottom:12px;}
+.article-kicker .dot{width:5px;height:5px;border-radius:50%;}
+h1.article-title{font-size:34px;font-weight:700;letter-spacing:-.025em;line-height:1.15;color:var(--text-primary);margin-bottom:10px;}
+.article-lede{font-size:16px;color:var(--text-secondary);line-height:1.55;max-width:620px;}
+.article-meta{display:flex;gap:20px;margin-top:16px;font-size:12px;color:var(--text-muted);}
+.article-meta-item{display:flex;align-items:center;gap:5px;}
+/* CALLOUT */
+.callout{display:flex;gap:14px;padding:14px 18px;border-radius:var(--radius-md);margin:18px 0;border:1px solid;}
+.callout.info{background:var(--brand-soft);border-color:#BFDBFE;}
+.callout.info .callout-icon{color:var(--brand);}
+.callout.warning{background:var(--amber-soft);border-color:#FDE68A;}
+.callout.warning .callout-icon{color:var(--amber);}
+.callout-icon{flex-shrink:0;width:18px;height:18px;margin-top:2px;}
+.callout-body{font-size:13.5px;color:var(--text-primary);line-height:1.55;}
+.callout-title{font-weight:600;margin-bottom:2px;}
+/* SECTIONS */
+.section{margin:36px 0;scroll-margin-top:80px;}
+.section-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;background:var(--text-primary);color:white;font-weight:700;font-size:13px;margin-bottom:10px;}
+h2.section-title{font-size:21px;font-weight:700;letter-spacing:-.02em;color:var(--text-primary);margin-bottom:8px;line-height:1.25;}
+.section-intro{font-size:14.5px;color:var(--text-secondary);margin-bottom:18px;max-width:680px;}
+h3.subsection-title{font-size:15px;font-weight:600;color:var(--text-primary);margin:20px 0 8px;}
+p{color:var(--text-secondary);margin-bottom:12px;max-width:680px;font-size:14.5px;}
+p strong{color:var(--text-primary);font-weight:600;}
+ul.bullet-list{margin:10px 0 10px 20px;color:var(--text-secondary);max-width:680px;}
+ul.bullet-list li{margin-bottom:7px;font-size:14.5px;}
+ul.bullet-list li strong{color:var(--text-primary);}
+/* SCREENSHOT */
+.screenshot-placeholder{margin:18px 0;border-radius:var(--radius-lg);background:var(--bg-elevated);border:1.5px dashed var(--border-strong);padding:32px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:180px;position:relative;overflow:hidden;}
+.screenshot-placeholder::before{content:'';position:absolute;inset:0;background-image:linear-gradient(45deg,var(--surface-soft) 25%,transparent 25%),linear-gradient(-45deg,var(--surface-soft) 25%,transparent 25%);background-size:16px 16px;background-position:0 0,0 8px;opacity:.4;z-index:0;}
+.screenshot-placeholder>*{position:relative;z-index:1;}
+.screenshot-icon{width:42px;height:42px;border-radius:10px;background:white;display:flex;align-items:center;justify-content:center;margin-bottom:10px;color:var(--text-muted);box-shadow:var(--shadow-sm);}
+.screenshot-label{font-size:10px;font-weight:700;color:var(--text-muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px;}
+.screenshot-title{font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:3px;}
+.screenshot-spec{font-size:11px;color:var(--text-muted);font-family:var(--mono);}
+/* ANNOTATION */
+.annotation-list{margin:14px 0;padding:14px 18px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);}
+.annotation-list-title{font-size:10px;font-weight:700;color:var(--text-muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;}
+.annotation-row{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13.5px;color:var(--text-secondary);line-height:1.5;}
+.annotation-row:last-child{border-bottom:none;}
+.annotation-num{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--brand);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.annotation-row strong{color:var(--text-primary);}
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:100px;font-size:11.5px;font-weight:500;vertical-align:middle;}
+.badge .badge-dot{width:5px;height:5px;border-radius:50%;}
+.badge.draft{background:var(--amber-soft);color:#B45309;}.badge.draft .badge-dot{background:var(--amber);}
+.badge.finalized{background:var(--green-soft);color:#047857;}.badge.finalized .badge-dot{background:var(--green);}
+.badge.pending{background:var(--brand-soft);color:var(--brand-text);}.badge.pending .badge-dot{background:var(--brand);}
+.badge.inactive{background:var(--red-soft);color:#B91C1C;}.badge.inactive .badge-dot{background:var(--red);}
+/* STATUS TABLE */
+.status-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px;}
+.status-table th{text-align:left;padding:9px 13px;background:var(--surface-soft);font-size:11px;font-weight:700;color:var(--text-muted);letter-spacing:.5px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+.status-table td{padding:11px 13px;border-bottom:1px solid var(--border);color:var(--text-secondary);vertical-align:top;}
+.status-table tr:last-child td{border-bottom:none;}
+/* RELATED */
+.related-section{margin-top:48px;padding-top:24px;border-top:1px solid var(--border);}
+.related-label{font-size:11px;font-weight:700;color:var(--text-muted);letter-spacing:.6px;text-transform:uppercase;margin-bottom:12px;}
+.related-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.related-card{display:flex;align-items:flex-start;gap:12px;padding:13px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);text-decoration:none;transition:all .15s;cursor:pointer;}
+.related-card:hover{border-color:var(--brand);box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.related-card-icon{flex-shrink:0;width:32px;height:32px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;background:var(--brand-soft);color:var(--brand);}
+.related-card-icon.howto{background:var(--green-soft);color:var(--green);}
+.related-card-icon.ref{background:var(--purple-soft);color:var(--purple);}
+.related-card-label{font-size:10px;font-weight:700;color:var(--text-muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px;}
+.related-card-title{font-size:13px;font-weight:600;color:var(--text-primary);}
+/* FEEDBACK */
+.feedback{margin-top:40px;padding:18px 22px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.feedback-text{font-size:14px;color:var(--text-secondary);font-weight:500;}
+.feedback-actions{display:flex;gap:8px;}
+.feedback-btn{padding:7px 14px;background:white;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:var(--sans);font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all .15s;}
+.feedback-btn:hover{border-color:var(--brand);color:var(--brand);}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}.sidebar{display:none;}.main-inner{padding:28px 20px;}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-left">
+    <img src="assets/logo/maya-vob-logo.png" alt="Maya VOB" class="brand-logo-img" onerror="this.style.display='none'">
+    <span class="topbar-title">Verification of Benefits User Manual</span>
+  </div>
+</header>
+<div class="layout">
+<aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-section-label tutorial" onclick="toggleSection(this)"><span class="dot"></span> Tutorial <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <a class="sidebar-link" data-target="t1" onclick="showArticle('t1');return false;"><span class="article-num">T1</span>Get Started with Maya VOB</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label howto" onclick="toggleSection(this)"><span class="dot"></span> How-To <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <a class="sidebar-link" data-target="h0" onclick="showArticle('h0');return false;"><span class="article-num">H0</span>Accessing Insurance VOB</a>
+      <a class="sidebar-link" data-target="h1" onclick="showArticle('h1');return false;"><span class="article-num">H1</span>Navigate the dashboard</a>
+      <a class="sidebar-link" data-target="h2a" onclick="showArticle('h2a');return false;"><span class="article-num">H2</span>Start a benefits inquiry</a>
+      <a class="sidebar-link sidebar-sublink" data-target="h2a" onclick="showArticle('h2a');return false;"><span class="article-num"></span>Add a single patient</a>
+      <a class="sidebar-link sidebar-sublink" data-target="h2b" onclick="showArticle('h2b');return false;"><span class="article-num"></span>Upload patients in bulk<span class="lock-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Soon</span></a>
+      <a class="sidebar-link" data-target="h3" onclick="showArticle('h3');return false;"><span class="article-num">H3</span>Access and print a VOB</a>
+      <a class="sidebar-link" data-target="h4" onclick="showArticle('h4');return false;"><span class="article-num">H4</span>Retrying a VOB</a>
+      <a class="sidebar-link" data-target="h5" onclick="showArticle('h5');return false;"><span class="article-num">H5</span>Handle a low-confidence VOB</a>
+      <a class="sidebar-link" data-target="h6" onclick="showArticle('h6');return false;"><span class="article-num">H6</span>Edit a VOB</a>
+      <a class="sidebar-link" data-target="h7" onclick="showArticle('h7');return false;"><span class="article-num">H7</span>Quick cost estimate</a>
+      <a class="sidebar-link" data-target="h8" onclick="showArticle('h8');return false;"><span class="article-num">H8</span>Detailed cost calculator</a>
+      <a class="sidebar-link" data-target="h9" onclick="showArticle('h9');return false;"><span class="article-num">H9</span>Select build types</a>
+      <a class="sidebar-link" data-target="h10a" onclick="showArticle('h10a');return false;"><span class="article-num">H10</span>Share cost estimate</a>
+      <a class="sidebar-link sidebar-sublink" data-target="h10a" onclick="showArticle('h10a');return false;"><span class="article-num"></span>Print</a>
+      <a class="sidebar-link sidebar-sublink" data-target="h10b" onclick="showArticle('h10b');return false;"><span class="article-num"></span>Email<span class="lock-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Soon</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label reference" onclick="toggleSection(this)"><span class="dot"></span> Reference <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <a class="sidebar-link" data-target="r1" onclick="showArticle('r1');return false;"><span class="article-num">R1</span>Status states</a>
+      <a class="sidebar-link" data-target="r2" onclick="showArticle('r2');return false;"><span class="article-num">R2</span>Confidence flags</a>
+      <a class="sidebar-link" data-target="r3" onclick="showArticle('r3');return false;"><span class="article-num">R3</span>Why a VOB may fail</a>
+      <a class="sidebar-link" data-target="r4" onclick="showArticle('r4');return false;"><span class="article-num">R4</span>Supported payers</a>
+      <a class="sidebar-link" data-target="r5" onclick="showArticle('r5');return false;"><span class="article-num">R5</span>Supported CPT codes</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label explanation" onclick="toggleSection(this)"><span class="dot"></span> Explanation <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <a class="sidebar-link" data-target="e1" onclick="showArticle('e1');return false;"><span class="article-num">E1</span>How patients land here</a>
+      <a class="sidebar-link" data-target="e2" onclick="showArticle('e2');return false;"><span class="article-num">E2</span>How retries work</a>
+      <a class="sidebar-link" data-target="e3" onclick="showArticle('e3');return false;"><span class="article-num">E3</span>How costs are calculated</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label appendix" onclick="toggleSection(this)"><span class="dot"></span> Appendix <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <a class="sidebar-link" data-target="a1" onclick="showArticle('a1');return false;"><span class="article-num">A1</span>Insurance terminology</a>
+      <a class="sidebar-link" data-target="a2" onclick="showArticle('a2');return false;"><span class="article-num">A2</span>Allergy CPT glossary</a>
+      <a class="sidebar-link" data-target="a3" onclick="showArticle('a3');return false;"><span class="article-num">A3</span>Tenant settings</a>
+    </div>
+  </aside>
+<main class="main" id="main-content">
+<div class="article" data-id="t1" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">Tutorial &middot; T1</a><span class="sep">/</span>
+      <span class="current">Get Started with Maya VOB</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--brand-soft);color:var(--brand-text);"><span class="dot" style="background:var(--brand);width:5px;height:5px;border-radius:50%;"></span> Tutorial &middot; T1</div>
+      <h1 class="article-title">Get Started with Maya VOB</h1>
+      <p class="article-lede">Your first 5 minutes with the system. By the end of this walkthrough you&rsquo;ll have reviewed a patient VOB and understood how to read a cost estimate.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>5 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <div class='section' style='margin-top:32px;'>
+      <h2 class='section-title'>Coming up</h2>
+      <p>This tutorial will be built after all How-To articles are validated with clinic staff. It will walk through a single happy-path scenario end-to-end.</p>
+      <ul class='bullet-list'>
+        <li>Step 1 &mdash; Logging in and reading the dashboard</li>
+        <li>Step 2 &mdash; Finding a patient in the queue</li>
+        <li>Step 3 &mdash; Opening the benefits document</li>
+        <li>Step 4 &mdash; Building a cost estimate</li>
+        <li>Step 5 &mdash; Printing the estimate for the patient</li>
+      </ul>
+      <p style="margin-top:16px;">In the meantime, start with <a href='#' onclick='showArticle("h1");return false;'><strong>H1: Navigate the dashboard</strong></a>.</p>
+    </div>
+    </div></div><div class="article" data-id="h0" style="display:block"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">How-To &middot; H0</a><span class="sep">/</span>
+      <span class="current">Accessing Insurance VOB</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--green-soft);color:#047857;"><span class="dot" style="background:var(--green);width:5px;height:5px;border-radius:50%;"></span> How-To &middot; H0</div>
+      <h1 class="article-title">Accessing Insurance VOB</h1>
+      <p class="article-lede">Navigate to the Insurance Verification dashboard from the main Maya portal.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>1 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <p style="margin-top:8px;color:var(--text-secondary);font-size:14.5px;max-width:680px;">The Insurance VOB Agent is accessible from the main Maya portal. Follow these two steps to reach the verification dashboard.</p>
+    <div class="section" id="s0">
+      <h2 class="section-title">Open the home screen</h2>
+      <p>Log in to the Maya portal. The home screen displays all available agents at the top.</p>
+      <div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Home screen &mdash; Agents panel visible at top</div>
+          <div class="screenshot-spec">assets/images/h0/01-home-screen-agents.png &middot; 1440×900</div>
+        </div>
+    </div>
+    <div class="section" id="s1">
+      <h2 class="section-title">Navigate to Insurance Verification</h2>
+      <p>Hover over <strong>Insurance</strong> in the agents panel and click <strong>Verification</strong>. The Insurance VOB dashboard loads.</p>
+      <div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Hover on Insurance &mdash; Verification option highlighted</div>
+          <div class="screenshot-spec">assets/images/h0/02-hover-insurance-verification.png &middot; 1440×900</div>
+        </div>
+    </div>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h1');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H1</div><div class="related-card-title">Navigate the dashboard</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h2a');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H2a</div><div class="related-card-title">Add a single patient</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="h1" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">How-To &middot; H1</a><span class="sep">/</span>
+      <span class="current">Navigate the dashboard</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--green-soft);color:#047857;"><span class="dot" style="background:var(--green);width:5px;height:5px;border-radius:50%;"></span> How-To &middot; H1</div>
+      <h1 class="article-title">Navigate the dashboard</h1>
+      <p class="article-lede">Your home base for benefits verification. Here&rsquo;s what each region on the screen does.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>2 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <div class="callout info"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div class="callout-body">Maya VOB runs automatically &mdash; most patients appear here without any action from you. The dashboard is for review, not initiation. To add a patient manually, see <a href='#' onclick='showArticle("h2a");return false;'><strong>H2: Start a benefits inquiry</strong></a>.</div></div>
+    <div class="section" id="s0">
+      <h2 class="section-title">Dashboard at a glance</h2>
+      <p class="section-intro">The dashboard has five regions. The top bar holds product navigation and your profile &mdash; it stays fixed as you scroll.</p>
+      <div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Full dashboard &mdash; annotated with 5 regions</div>
+          <div class="screenshot-spec">assets/images/h1/01-dashboard-overview.png &middot; 1440×900</div>
+        </div>
+      <div class="annotation-list">
+        <div class="annotation-list-title">Five regions</div>
+        <div class="annotation-row"><span class="annotation-num">1</span><div><strong>Header filters</strong> &mdash; Doctor and Date Range. Scope everything on the page.</div></div>
+        <div class="annotation-row"><span class="annotation-num">2</span><div><strong>Summary cards</strong> &mdash; Total VOBs, Generated, Not Generated.</div></div>
+        <div class="annotation-row"><span class="annotation-num">3</span><div><strong>Operations panel</strong> &mdash; Add patient and Upload patients for manual flows.</div></div>
+        <div class="annotation-row"><span class="annotation-num">4</span><div><strong>Status filters</strong> &mdash; chips to narrow the table by case state.</div></div>
+        <div class="annotation-row"><span class="annotation-num">5</span><div><strong>Patient table</strong> &mdash; the working list. Click any row to open a patient.</div></div>
+      </div>
+    </div>
+    <div class="section" id="s1">
+      <div class="section-num">1</div>
+      <h2 class="section-title">Header filters</h2>
+      <p>The <strong>Doctor</strong> and <strong>Date Range</strong> filters scope everything on the page. Date Range filters by <strong>service date</strong> (appointment date, not when the VOB was generated). Click Reset to clear both.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Doctor and Date Range filter chips</div>
+          <div class="screenshot-spec">assets/images/h1/02-header-filters.png &middot; 640&times;100</div>
+        </div>
+    </div>
+    <div class="section" id="s2">
+      <div class="section-num">2</div>
+      <h2 class="section-title">Summary cards</h2>
+      <p>Three counts reflecting your current filter selection.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Three summary cards</div>
+          <div class="screenshot-spec">assets/images/h1/03-summary-cards.png &middot; 1100&times;220</div>
+        </div><div class='annotation-list'><div class='annotation-list-title'>What each card counts</div><div class='annotation-row'><span class='annotation-num' style='background:#10B981;'>1</span><div><strong>Total VOBs</strong> &mdash; all patient cases in the system for your current filters.</div></div><div class='annotation-row'><span class='annotation-num' style='background:#A855F7;'>2</span><div><strong>Generated VOBs</strong> &mdash; cases where benefits are verified and the document is ready.</div></div><div class='annotation-row'><span class='annotation-num' style='background:#14B8A6;'>3</span><div><strong>Not Generated VOBs</strong> &mdash; cases the agent couldn&rsquo;t complete. See <a href='#' onclick='showArticle("r3");return false;'>R3</a> for common reasons.</div></div></div><p style='margin-top:14px;'>Click any summary card to filter the patient table to only show cases in that state.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Clicking a summary card filters the table</div>
+          <div class="screenshot-spec">assets/images/h1/04-click-card-to-filter.png &middot; 1100&times;72</div>
+        </div>
+    </div>
+    <div class="section" id="s3">
+      <div class="section-num">3</div>
+      <h2 class="section-title">Operations panel</h2>
+      <p>Two quick-action cards on the right for manual flows &mdash; walk-ins, same-day adds, and urgent cases not covered by the automated run.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Operations panel &mdash; Add patient + Upload patients</div>
+          <div class="screenshot-spec">assets/images/h1/05-operations-panel.png &middot; 420&times;300</div>
+        </div><ul class='bullet-list'><li><strong>Add patient (Start Now)</strong> &mdash; single patient entry. See <a href='#' onclick='showArticle("h2a");return false;'>H2a</a>.</li><li><strong>Upload patients (Batch Processing)</strong> &mdash; CSV bulk upload. See <a href='#' onclick='showArticle("h2b");return false;'>H2b</a>.</li></ul>
+    </div>
+    <div class="section" id="s4">
+      <div class="section-num">4</div>
+      <h2 class="section-title">Status filters</h2>
+      <p>Click a chip to narrow the patient table to that state. Click again to clear. Full definitions in <a href='#' onclick='showArticle("r1");return false;'>R1: Status states</a>.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Status filter chip row</div>
+          <div class="screenshot-spec">assets/images/h1/06-status-filters.png &middot; 1100&times;72</div>
+        </div><table class='status-table'><thead><tr><th>Status</th><th>What it means</th></tr></thead><tbody><tr><td><span class='badge draft'><span class='badge-dot'></span>In Draft</span></td><td>Benefits verified, awaiting your review and confirmation. Editable.</td></tr><tr><td><span class='badge finalized'><span class='badge-dot'></span>Cost Finalized</span></td><td>Cost estimate confirmed and locked. Requires a Re-VOB to change.</td></tr><tr><td><span class='badge pending'><span class='badge-dot'></span>Pending Action</span></td><td>Flagged for staff input &mdash; typically a missing or ambiguous data point.</td></tr><tr><td><span class='badge inactive'><span class='badge-dot'></span>Inactive / Not Verified</span></td><td>Insurance inactive or could not be verified.</td></tr></tbody></table>
+    </div>
+    <div class="section" id="s5">
+      <div class="section-num">5</div>
+      <h2 class="section-title">Patient table</h2>
+      <p>The working list. Click any row to open the patient&rsquo;s cost details page.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Patient table with toolbar</div>
+          <div class="screenshot-spec">assets/images/h1/07-patient-table.png &middot; 1100&times;480</div>
+        </div><h3 class='subsection-title'>Toolbar</h3><ul class='bullet-list'><li><strong>Search Patient</strong> &mdash; search by name within the current filtered list.</li><li><strong>Service Date sort</strong> &mdash; toggle ascending/descending by appointment date.</li><li><strong>Filter</strong> &mdash; filter by insurance carrier.</li><li><strong>Show PII</strong> &mdash; toggle to mask patient names for screen sharing.</li></ul><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Search patient field in the table toolbar</div>
+          <div class="screenshot-spec">assets/images/h1/08-search-patient.png &middot; 1100&times;100</div>
+        </div><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Advanced filters &mdash; filter by insurance carrier</div>
+          <div class="screenshot-spec">assets/images/h1/09-advanced-filters.png &middot; 1100&times;300</div>
+        </div><h3 class='subsection-title'>Columns</h3><ul class='bullet-list'><li><strong>Patient Name</strong> &mdash; last, first. Avatar shows initials.</li><li><strong>Service Date</strong> &mdash; patient&rsquo;s upcoming or past appointment date.</li><li><strong>Benefits Verified On</strong> &mdash; when the VOB was last generated. <code>&mdash;</code> if not yet run.</li><li><strong>Provider</strong> &mdash; treating provider for this visit.</li><li><strong>Insurance Provider</strong> &mdash; payer as captured from the EHR.</li><li><strong>Status</strong> &mdash; current state badge. See Section 4 above.</li></ul>
+    </div>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h2a');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H2</div><div class="related-card-title">Start a benefits inquiry</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('r1');return false;">
+          <div class="related-card-icon ref"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Reference &middot; R1</div><div class="related-card-title">Status states</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('r2');return false;">
+          <div class="related-card-icon ref"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Reference &middot; R2</div><div class="related-card-title">Confidence flags</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('e1');return false;">
+          <div class="related-card-icon "><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Explanation &middot; E1</div><div class="related-card-title">How patients land on the dashboard</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="h2a" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">How-To &middot; H2a</a><span class="sep">/</span>
+      <span class="current">Add a single patient</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--green-soft);color:#047857;"><span class="dot" style="background:var(--green);width:5px;height:5px;border-radius:50%;"></span> How-To &middot; H2a</div>
+      <h1 class="article-title">Add a single patient</h1>
+      <p class="article-lede">Manually start a benefits inquiry for a walk-in, same-day add, or urgent case.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>2 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <div class="callout info"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div class="callout-body">Most patients appear automatically from your EHR schedule. Use this flow only when a patient isn&rsquo;t already on the dashboard.</div></div>
+    <div class="section" id="s1">
+      <div class="section-num">1</div>
+      <h2 class="section-title">Click Add patient</h2>
+      <div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Operations panel &mdash; Add patient CTA</div>
+          <div class="screenshot-spec">assets/images/h2a/01-add-patient-cta.png &middot; 420&times;300</div>
+        </div><p>From the dashboard, click <strong>Add patient</strong> in the Operations panel (top right). The Add Patient modal opens.</p>
+    </div>
+    <div class="section" id="s2">
+      <div class="section-num">2</div>
+      <h2 class="section-title">Fill in required fields</h2>
+      <div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Add Patient modal &mdash; required fields</div>
+          <div class="screenshot-spec">assets/images/h2a/02-add-patient-modal.png &middot; 720&times;600</div>
+        </div><p>All fields marked with an asterisk are required:</p><table class='status-table'><thead><tr><th>Field</th><th>Notes</th></tr></thead><tbody><tr><td><strong>First name &amp; Last name</strong></td><td>As shown on insurance card.</td></tr><tr><td><strong>Date of Birth</strong></td><td>Format: MMDDYYYY</td></tr><tr><td><strong>Insurance Provider</strong></td><td>Dropdown-driven. Select from list to ensure correct payer routing.</td></tr><tr><td><strong>Policy Number</strong></td><td>Member ID from insurance card.</td></tr><tr><td><strong>Service Date</strong></td><td>Format: MMDDYYYY &mdash; the appointment date.</td></tr></tbody></table><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Insurance Provider dropdown selection</div>
+          <div class="screenshot-spec">assets/images/h2a/03-insurance-provider-dropdown.png &middot; 720&times;360</div>
+        </div>
+    </div>
+    <div class="section" id="s3">
+      <div class="section-num">3</div>
+      <h2 class="section-title">Optional fields</h2>
+      <p>These can be left blank and filled in later if needed:</p><ul class='bullet-list'><li><strong>Provider name</strong> &mdash; treating provider for this visit.</li><li><strong>Phone number</strong></li><li><strong>Email ID</strong></li></ul><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Add Patient modal &mdash; optional fields panel</div>
+          <div class="screenshot-spec">assets/images/h2a/04-optional-fields.png &middot; 680&times;280</div>
+        </div>
+    </div>
+    <div class="section" id="s4">
+      <div class="section-num">4</div>
+      <h2 class="section-title">Submit and wait</h2>
+      <p>Click <strong>Add Patient &amp; Start Benefits Inquiry</strong>. The modal closes and the patient appears at the top of the dashboard with an <strong>In Creation</strong> status and a 2-minute countdown timer.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Add Patient &amp; Start Benefits Inquiry button</div>
+          <div class="screenshot-spec">assets/images/h2a/05-add-and-start-benefits-inquriy.png &middot; 720&times;120</div>
+        </div><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Searching for the newly added patient on the dashboard</div>
+          <div class="screenshot-spec">assets/images/h2a/06-search-patient.png &middot; 1100&times;120</div>
+        </div><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Patient in creation state with timer</div>
+          <div class="screenshot-spec">assets/images/h2a/07-in-creation-timer.png &middot; 1100&times;120</div>
+        </div><div class="callout info"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div class="callout-body"><div class="callout-title">What happens next</div>The benefits document completes in <strong>less than 20 seconds</strong>. The cost calculator takes approximately <strong>1 minute to unlock</strong> after the document is ready. The page auto-refreshes and updates status automatically.</div></div>
+    </div>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h2b');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H2b</div><div class="related-card-title">Upload patients in bulk</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h3');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H3</div><div class="related-card-title">Access and print a VOB document</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('e1');return false;">
+          <div class="related-card-icon "><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Explanation &middot; E1</div><div class="related-card-title">How patients land on the dashboard</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="h2b" style="display:none"><div class="main-inner">
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;padding:48px;">
+      <div style="width:64px;height:64px;border-radius:16px;background:var(--surface-soft);display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">How-To &middot; H2b &middot; Coming Soon</div>
+      <h1 style="font-size:28px;font-weight:700;letter-spacing:-0.02em;color:var(--text-primary);margin-bottom:10px;">Upload patients in bulk</h1>
+      <p style="font-size:15px;color:var(--text-secondary);max-width:400px;line-height:1.6;">User manual releasing soon.</p>
+    </div></div></div><div class="article" data-id="h3" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">How-To &middot; H3</a><span class="sep">/</span>
+      <span class="current">Access and print a VOB document</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--green-soft);color:#047857;"><span class="dot" style="background:var(--green);width:5px;height:5px;border-radius:50%;"></span> How-To &middot; H3</div>
+      <h1 class="article-title">Access and print a VOB document</h1>
+      <p class="article-lede">Open the benefits inquiry document generated by RagaAI for any patient, review coverage, and print or download.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>2 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <div class="section" id="s1">
+      <div class="section-num">1</div>
+      <h2 class="section-title">Click a patient row</h2>
+      <p>From the dashboard, click anywhere on a patient row to open their profile.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Patient row click &mdash; highlight on hover</div>
+          <div class="screenshot-spec">assets/images/h3/01-patient-row-click.png &middot; 1100&times;80</div>
+        </div>
+    </div>
+    <div class="section" id="s2">
+      <div class="section-num">2</div>
+      <h2 class="section-title">Open the Benefits Document</h2>
+      <p>The <strong>Verification Hub</strong> loads. Click <strong>Open Document</strong> under the Benefits Document card.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Verification Hub &mdash; Benefits Document and Cost Calculator options</div>
+          <div class="screenshot-spec">assets/images/h3/02-verification-hub.png &middot; 1100&times;480</div>
+        </div>
+    </div>
+    <div class="section" id="s3">
+      <div class="section-num">3</div>
+      <h2 class="section-title">Review the document</h2>
+      <p>The benefits document is a scrollable payer summary. It includes:</p><ul class='bullet-list'><li>Plan Information (carrier, plan type, in-network status, member ID, effective dates)</li><li>Deductible and Out-of-Pocket amounts (individual and family)</li><li>Authorizations (Prior Auth, Referral, Pre-existing limitations)</li><li>Service Benefits by CPT group (Allergy Testing, Immunotherapy, Rapid Desensitization, Respiratory)</li><li>Comments from payer response</li></ul><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Scrollable VOB document with disclaimers</div>
+          <div class="screenshot-spec">assets/images/h3/03-vob-document.png &middot; 900&times;700</div>
+        </div><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Benefits section &mdash; service coverage by CPT group</div>
+          <div class="screenshot-spec">assets/images/h3/04-benefits-section.png &middot; 900&times;400</div>
+        </div><p>Verify the details match your expectations. If something looks wrong, see <a href='#' onclick='showArticle("h5");return false;'>H5: Handle a low-confidence VOB</a> or <a href='#' onclick='showArticle("h6");return false;'>H6: Edit a VOB</a>.</p>
+    </div>
+    <div class="section" id="s4">
+      <div class="section-num">4</div>
+      <h2 class="section-title">Download or print</h2>
+      <p>Click <strong>Download</strong> in the top toolbar. Your browser downloads the document as a PDF. Open it locally to print.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Download button in document toolbar</div>
+          <div class="screenshot-spec">assets/images/h3/06-download-print.png &middot; 1100&times;72</div>
+        </div>
+    </div>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h5');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H5</div><div class="related-card-title">Handle a low-confidence VOB</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h6');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H6</div><div class="related-card-title">Edit a VOB</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h7');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H7</div><div class="related-card-title">Quick cost estimate</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="h4" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">How-To &middot; H4</a><span class="sep">/</span>
+      <span class="current">Retrying a VOB</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--green-soft);color:#047857;"><span class="dot" style="background:var(--green);width:5px;height:5px;border-radius:50%;"></span> How-To &middot; H4</div>
+      <h1 class="article-title">Retrying a VOB</h1>
+      <p class="article-lede">Re-run benefits verification to get a fresh payer response.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>2 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <div class="callout info"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div class="callout-body"><div class="callout-title">What Re-VOB does</div>A Re-VOB always fetches the most current information directly from the payer. Unlike payer call notes, it reflects real-time eligibility data.</div></div>
+    <div class="section">
+      <h2 class="section-title">When to use</h2>
+      <ul class="bullet-list">
+        <li>The deductible or OOP balance may have changed because claims were processed after the last VOB was generated.</li>
+        <li>The VOB failed on the first attempt &mdash; visible in the Comments section of the benefits document. See <a href="#" onclick="showArticle('r3');return false;">R3: Why a VOB may fail</a>.</li>
+      </ul>
+    </div>
+    <div class="section" id="s1">
+      <div class="section-num">1</div>
+      <h2 class="section-title">Open the patient record</h2>
+      <p>Click the patient row on the dashboard to open their Verification Hub.</p>
+    </div>
+    <div class="section" id="s2">
+      <div class="section-num">2</div>
+      <h2 class="section-title">Click Retry VOB</h2>
+      <div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Retry VOB button in top action bar</div>
+          <div class="screenshot-spec">assets/images/h4/01-retry-vob-button.png &middot; 1100&times;72</div>
+        </div><p>A confirmation modal appears. It warns that re-running will overwrite any manual changes you&rsquo;ve made to the coverage summary and treatments.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Retry and Reset confirmation modal</div>
+          <div class="screenshot-spec">assets/images/h4/02-retry-modal.png &middot; 640&times;360</div>
+        </div>
+    </div>
+    <div class="section" id="s3">
+      <div class="section-num">3</div>
+      <h2 class="section-title">Confirm</h2>
+      <p>Click <strong>Retry and Reset</strong> to proceed. The system re-runs the eligibility check. The patient status returns to <strong>In Draft</strong> once complete.</p><div class="callout warning"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div class="callout-body"><div class="callout-title">Retry limit</div>For a given service date, there is a maximum of <strong>5 retries</strong>. Once reached, no further retries are possible for that appointment.</div></div>
+    </div>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h5');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H5</div><div class="related-card-title">Handle a low-confidence VOB</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h6');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H6</div><div class="related-card-title">Edit a VOB</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('r3');return false;">
+          <div class="related-card-icon ref"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Reference &middot; R3</div><div class="related-card-title">Why a VOB may fail</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="h5" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">How-To &middot; H5</a><span class="sep">/</span>
+      <span class="current">Handle a low-confidence VOB</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--green-soft);color:#047857;"><span class="dot" style="background:var(--green);width:5px;height:5px;border-radius:50%;"></span> How-To &middot; H5</div>
+      <h1 class="article-title">Handle a low-confidence VOB</h1>
+      <p class="article-lede">Identify and resolve cases where the system couldn&rsquo;t fully verify benefits.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>2 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <div class="section" id="s1">
+      <div class="section-num">1</div>
+      <h2 class="section-title">Identify confidence from the dashboard</h2>
+      <p>Confidence is shown by the <strong>coloured circle</strong> to the right of the patient name in the table.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Patient table &mdash; confidence circles visible next to patient names</div>
+          <div class="screenshot-spec">assets/images/h5/01-confidence-circles.png &middot; 1100&times;300</div>
+        </div><table class='status-table'><thead><tr><th>Colour</th><th>Meaning</th></tr></thead><tbody><tr><td><span style='display:inline-block;width:12px;height:12px;border-radius:50%;background:#10B981;margin-right:6px;'></span><strong>Green</strong></td><td>High confidence &mdash; benefits fully verified.</td></tr><tr><td><span style='display:inline-block;width:12px;height:12px;border-radius:50%;background:#EF4444;margin-right:6px;'></span><strong>Red</strong></td><td>Low confidence, inactive insurance, or invalid patient details.</td></tr><tr><td><span style='display:inline-block;width:12px;height:12px;border-radius:50%;background:#94A3B8;margin-right:6px;'></span><strong>Grey</strong></td><td>Unsupported payer &mdash; the system couldn&rsquo;t query this carrier.</td></tr></tbody></table>
+    </div>
+    <div class="section" id="s2">
+      <div class="section-num">2</div>
+      <h2 class="section-title">Open the record</h2>
+      <p>Click the patient row. The header banner shows the confidence score and turns <span style='color:#EF4444;font-weight:600;'>red</span> for low confidence or <span style='color:#10B981;font-weight:600;'>green</span> for high confidence.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Patient profile header &mdash; red banner for low confidence with score</div>
+          <div class="screenshot-spec">assets/images/h5/02-low-confidence-header.png &middot; 1100&times;80</div>
+        </div>
+    </div>
+    <div class="section" id="s3">
+      <div class="section-num">3</div>
+      <h2 class="section-title">Read the VOB document</h2>
+      <p>Open the Benefits Document. A <strong>&ldquo;Low confidence Benefits&rdquo;</strong> flag appears at the top. Scroll to the <strong>Comments</strong> section to find the specific failure reason.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">VOB document &mdash; low confidence flag and comments section</div>
+          <div class="screenshot-spec">assets/images/h5/03-low-confidence-doc.png &middot; 900&times;500</div>
+        </div>
+    </div>
+    <div class="section">
+      <h2 class="section-title">What to do next</h2>
+      <ul class="bullet-list">
+        <li><strong>Attempt a retry</strong> &mdash; this re-queries the payer and may resolve the issue. See <a href="#" onclick="showArticle('h4');return false;">H4: Request a new VOB</a>.</li>
+        <li><strong>If retries don&rsquo;t resolve it</strong> &mdash; edit the document manually with the correct information from a payer call or portal. See <a href="#" onclick="showArticle('h6');return false;">H6: Edit a VOB</a>.</li>
+        <li><strong>Grey circle (unsupported payer)</strong> &mdash; the system can&rsquo;t query this carrier yet. A manual VOB will be required. Contact your billing team.</li>
+      </ul>
+    </div>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h4');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H4</div><div class="related-card-title">Request a new VOB</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h6');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H6</div><div class="related-card-title">Edit a VOB</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('r3');return false;">
+          <div class="related-card-icon ref"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Reference &middot; R3</div><div class="related-card-title">Why a VOB may fail</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="h6" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">How-To &middot; H6</a><span class="sep">/</span>
+      <span class="current">Edit a VOB</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--green-soft);color:#047857;"><span class="dot" style="background:var(--green);width:5px;height:5px;border-radius:50%;"></span> How-To &middot; H6</div>
+      <h1 class="article-title">Edit a VOB</h1>
+      <p class="article-lede">Manually correct or complete a benefits document when the payer response is missing data or the system flagged low confidence.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>2 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <div class="section" id="s1">
+      <div class="section-num">1</div>
+      <h2 class="section-title">Open the Benefits Document</h2>
+      <p>From the patient&rsquo;s Verification Hub, click <strong>Open Document</strong>. The document opens in editable mode &mdash; all fields can be edited directly.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">VOB document in editable state &mdash; fields highlighted</div>
+          <div class="screenshot-spec">assets/images/h6/01-editable-vob.png &middot; 900&times;600</div>
+        </div>
+    </div>
+    <div class="section" id="s2">
+      <div class="section-num">2</div>
+      <h2 class="section-title">Edit fields as needed</h2>
+      <p>Click any field to edit it. Common corrections include deductible amounts, OOP balances, copay values, and coinsurance percentages. Cross-reference against a payer portal or call notes.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Editing a field in the VOB document &mdash; in-line text input</div>
+          <div class="screenshot-spec">assets/images/h6/02-editing-field.png &middot; 900&times;300</div>
+        </div>
+    </div>
+    <div class="section" id="s3">
+      <div class="section-num">3</div>
+      <h2 class="section-title">Save and Confirm</h2>
+      <p>Click <strong>Save &amp; Confirm</strong> in the top action bar. The document moves to a <strong>Finalizing&hellip;</strong> state while the system verifies the information.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Save and Confirm button &mdash; Finalizing state visible</div>
+          <div class="screenshot-spec">assets/images/h6/03-save-confirm-finalizing.png &middot; 1100&times;72</div>
+        </div><div class="callout info"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div class="callout-body"><div class="callout-title">What happens next</div>The Cost Calculator unlocks after approximately 60 seconds once verification is complete.</div></div><div class="callout warning"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div class="callout-body">If the entered information can&rsquo;t be reconciled with the expected payer response structure, the Cost Calculator will remain locked. Review any fields that may contain placeholder or inconsistent values, correct them, and save again.</div></div>
+    </div>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h4');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H4</div><div class="related-card-title">Request a new VOB</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h7');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H7</div><div class="related-card-title">Quick cost estimate</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h8');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H8</div><div class="related-card-title">Detailed cost calculator</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="h7" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">How-To &middot; H7</a><span class="sep">/</span>
+      <span class="current">Quick cost estimate (Doctor view)</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--green-soft);color:#047857;"><span class="dot" style="background:var(--green);width:5px;height:5px;border-radius:50%;"></span> How-To &middot; H7</div>
+      <h1 class="article-title">Quick cost estimate (Doctor view)</h1>
+      <p class="article-lede">Add treatments and see patient-owed costs in a clean read-only summary. The view used to walk doctors and patients through estimates.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>2 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <div class="section" id="s1">
+      <div class="section-num">1</div>
+      <h2 class="section-title">Open the Cost Calculator</h2>
+      <p>From the Verification Hub, click <strong>Open Calculator</strong> under the Cost Calculator card.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Verification Hub &mdash; Cost Calculator card with Open Calculator link</div>
+          <div class="screenshot-spec">assets/images/h7/01-open-calculator.png &middot; 1100&times;480</div>
+        </div>
+    </div>
+    <div class="section" id="s2">
+      <div class="section-num">2</div>
+      <h2 class="section-title">Switch to Doctor View</h2>
+      <p>The calculator opens on the <strong>Doctor View</strong> tab by default (read-only summary). Use the tabs at the top to switch between Doctor View and Staff Edit.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Cost calculator &mdash; Doctor View tab active, Staff Edit tab visible</div>
+          <div class="screenshot-spec">assets/images/h7/02-doctor-view-tabs.png &middot; 1100&times;80</div>
+        </div><table class='status-table'><thead><tr><th>Column</th><th>What it shows</th></tr></thead><tbody><tr><td>CPT Code</td><td>Procedure code</td></tr><tr><td>Description</td><td>Treatment name and quantity info</td></tr><tr><td>Allowed Amount/Unit</td><td>Contracted rate per unit</td></tr><tr><td>Qty (Units)</td><td>Number of units</td></tr><tr><td>Patient Owes (After Insurance)</td><td>Calculated patient responsibility</td></tr><tr><td>Action</td><td>Delete treatment</td></tr></tbody></table><p>The <strong>side panel</strong> shows plan details organized into three groups:</p><ul class='bullet-list'><li><strong>Insurance details</strong> &mdash; Carrier, Plan Name, Coinsurance, Specialist Copay, Prior Auth and Referral requirements.</li><li><strong>Deductible &amp; OOP</strong> &mdash; Individual and Family remaining amounts for both deductible and out-of-pocket maximum.</li><li><strong>Disclaimers</strong> &mdash; payer-specific notes and processing caveats.</li></ul><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Side panel &mdash; Insurance details (Carrier, Plan, Coinsurance, Copay)</div>
+          <div class="screenshot-spec">assets/images/h7/06-leftpane-insurance-details.png &middot; 420&times;320</div>
+        </div><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Side panel &mdash; Deductible and Out-of-Pocket remaining (Individual / Family)</div>
+          <div class="screenshot-spec">assets/images/h7/07-leftpane-deductible-oop.png &middot; 420&times;240</div>
+        </div><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Side panel &mdash; Disclaimers and payer notes</div>
+          <div class="screenshot-spec">assets/images/h7/08-leftpane-disclaimers.png &middot; 420&times;240</div>
+        </div>
+    </div>
+    <div class="section" id="s3">
+      <div class="section-num">3</div>
+      <h2 class="section-title">Add a treatment</h2>
+      <p>Click the search bar and type a treatment name or CPT code. Select from the dropdown to add it to the table.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Search treatments dropdown &mdash; typing CPT code or name</div>
+          <div class="screenshot-spec">assets/images/h7/03-search-treatment.png &middot; 800&times;300</div>
+        </div>
+    </div>
+    <div class="section" id="s4">
+      <div class="section-num">4</div>
+      <h2 class="section-title">Adjust quantity</h2>
+      <p>Click the <strong>+</strong> or <strong>&minus;</strong> buttons, or type directly in the quantity field. Costs update in real time.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Quantity adjustment &mdash; + and - controls with real-time cost update</div>
+          <div class="screenshot-spec">assets/images/h7/04-adjust-quantity.png &middot; 1100&times;120</div>
+        </div>
+    </div>
+    <div class="section" id="s5">
+      <div class="section-num">5</div>
+      <h2 class="section-title">Review the grand total</h2>
+      <p>Scroll down to see the <strong>Estimated Grand Total</strong>. If CPT 95180 is in the list, build type comparison cards (Rush / Cluster / Conventional) appear here automatically. See <a href='#' onclick='showArticle("h9");return false;'>H9: Select build types</a>.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Estimated grand total &mdash; tentative cost after insurance with build type cards if 95180 added</div>
+          <div class="screenshot-spec">assets/images/h7/05-grand-total.png &middot; 1100&times;500</div>
+        </div><p>To delete a treatment, click the <strong>dustbin icon</strong> on its row.</p>
+    </div>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h8');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H8</div><div class="related-card-title">Detailed cost calculator</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h9');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H9</div><div class="related-card-title">Select build types</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h10a');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H10a</div><div class="related-card-title">Print cost estimate</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="h8" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">How-To &middot; H8</a><span class="sep">/</span>
+      <span class="current">Detailed cost calculator (Staff view)</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--green-soft);color:#047857;"><span class="dot" style="background:var(--green);width:5px;height:5px;border-radius:50%;"></span> How-To &middot; H8</div>
+      <h1 class="article-title">Detailed cost calculator (Staff view)</h1>
+      <p class="article-lede">Full control over rates, coins/copay, service order, and what counts toward the grand total.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>2 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <div class="section" id="s1">
+      <div class="section-num">1</div>
+      <h2 class="section-title">Switch to Staff Edit</h2>
+      <p>From the Cost Calculator, click the <strong>Staff Edit</strong> tab at the top. The table expands with additional editable columns.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Staff Edit tab &mdash; expanded columns visible</div>
+          <div class="screenshot-spec">assets/images/h8/01-staff-edit-tab.png &middot; 1100&times;80</div>
+        </div><table class='status-table'><thead><tr><th>Column</th><th>What it shows</th></tr></thead><tbody><tr><td>CPT Code</td><td>Procedure code</td></tr><tr><td>Description</td><td>Treatment name, quantity, build type badge</td></tr><tr><td>Allowed/Unit</td><td>Contracted rate &mdash; editable</td></tr><tr><td>Qty</td><td>Units &mdash; editable</td></tr><tr><td>Subtotal</td><td>Allowed &times; Qty</td></tr><tr><td>Coins</td><td>Coinsurance % &mdash; editable</td></tr><tr><td>Copay</td><td>Copay amount &mdash; editable</td></tr><tr><td>Deductible</td><td>Deductible applied to this line</td></tr><tr><td>PT Owes</td><td>Calculated patient responsibility</td></tr><tr><td>Include</td><td>Toggle to include/exclude from grand total</td></tr></tbody></table>
+    </div>
+    <div class="section" id="s2">
+      <div class="section-num">2</div>
+      <h2 class="section-title">Edit rates, coins, and copay</h2>
+      <p>Click any editable field (Allowed/Unit, Coins, Copay) to edit directly, the same way as adjusting quantity. Use this to correct contracted rates or fix coinsurance percentages returned incorrectly by the payer.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Editing allowed amount field inline</div>
+          <div class="screenshot-spec">assets/images/h8/02-edit-allowed.png &middot; 1100&times;120</div>
+        </div>
+    </div>
+    <div class="section" id="s3">
+      <div class="section-num">3</div>
+      <h2 class="section-title">Reorder services (drag and drop)</h2>
+      <p>Drag the handle on the left of any row to reorder treatments. The deductible is applied <strong>top to bottom</strong> &mdash; the first treatment exhausts deductible before it carries to the next. Order affects patient cost.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Drag handles visible &mdash; reordering CPT rows</div>
+          <div class="screenshot-spec">assets/images/h8/03-drag-reorder.png &middot; 1100&times;200</div>
+        </div><div class="callout info"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div class="callout-body"><div class="callout-title">Ordering tip</div>Reorder to match the expected claims processing order from the payer. If immunotherapy is typically billed before office visits, put it first.</div></div>
+    </div>
+    <div class="section" id="s4">
+      <div class="section-num">4</div>
+      <h2 class="section-title">Include / exclude from grand total</h2>
+      <p>Use the <strong>Include toggle</strong> on the right of each row to exclude a CPT from the grand total. Excluded codes appear as <strong>Bill Per Visit</strong> items in the summary &mdash; quoted separately.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Include toggle off &mdash; CPT showing as Bill Per Visit in summary</div>
+          <div class="screenshot-spec">assets/images/h8/04-include-exclude.png &middot; 1100&times;300</div>
+        </div>
+    </div>
+    <div class="section" id="s5">
+      <div class="section-num">5</div>
+      <h2 class="section-title">Done</h2>
+      <p>Click <strong>Done</strong> at the top right to save your edits and return to the Doctor View. The grand total updates to reflect your changes.</p>
+    </div>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h7');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H7</div><div class="related-card-title">Quick cost estimate</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h9');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H9</div><div class="related-card-title">Select build types</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h10a');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H10a</div><div class="related-card-title">Print cost estimate</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="h9" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">How-To &middot; H9</a><span class="sep">/</span>
+      <span class="current">Select build types</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--green-soft);color:#047857;"><span class="dot" style="background:var(--green);width:5px;height:5px;border-radius:50%;"></span> How-To &middot; H9</div>
+      <h1 class="article-title">Select build types</h1>
+      <p class="article-lede">Compare Rush, Cluster, and Conventional immunotherapy builds when CPT 95180 is part of the treatment plan.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>2 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <div class="callout info"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div class="callout-body">Build type selection only appears when <strong>CPT 95180 (Rapid Desensitization)</strong> is added to the treatment list. The calculator auto-detects this and updates the view.</div></div>
+    <div class="section" id="s1">
+      <div class="section-num">1</div>
+      <h2 class="section-title">Add CPT 95180</h2>
+      <p>In either Doctor View or Staff Edit, search for and add CPT 95180 to the treatment list. The bottom of the calculator automatically expands to show three build type comparison cards.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Grand total area &mdash; Rush, Cluster, and Conventional build type cards side by side</div>
+          <div class="screenshot-spec">assets/images/h9/01-build-type-cards.png &middot; 1100&times;400</div>
+        </div>
+    </div>
+    <div class="section" id="s2">
+      <div class="section-num">2</div>
+      <h2 class="section-title">Select a build type (Doctor View)</h2>
+      <p>In Doctor View, use the dropdown on the 95180 treatment row to select the build type for that patient.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Doctor View &mdash; build type dropdown on 95180 row</div>
+          <div class="screenshot-spec">assets/images/h9/02-doctor-view-dropdown.png &middot; 1100&times;80</div>
+        </div>
+    </div>
+    <div class="section" id="s3">
+      <div class="section-num">3</div>
+      <h2 class="section-title">Select a build type (Staff View)</h2>
+      <p>In Staff Edit, the same dropdown is available. Build type selection is reflected in the cost calculations across all columns.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Staff View &mdash; build type dropdown on 95180 row</div>
+          <div class="screenshot-spec">assets/images/h9/03-staff-view-dropdown.png &middot; 1100&times;80</div>
+        </div>
+    </div>
+    <div class="section" id="s4">
+      <div class="section-num">4</div>
+      <h2 class="section-title">Check or uncheck build type cards</h2>
+      <p>Use the check/uncheck controls on the build type comparison cards to show or hide specific options. Deselect build types the patient isn&rsquo;t eligible for or that aren&rsquo;t being offered.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Build type cards &mdash; check and uncheck to include or exclude from summary</div>
+          <div class="screenshot-spec">assets/images/h9/04-check-uncheck-cards.png &middot; 1100&times;400</div>
+        </div><table class='status-table'><thead><tr><th>Build type</th><th>Visits</th><th>Notes</th></tr></thead><tbody><tr><td><strong>Rush Build</strong></td><td>~1 visit</td><td>Fastest. Highest billed amount per visit.</td></tr><tr><td><strong>Cluster Build</strong></td><td>~4 visits</td><td>Intermediate pace.</td></tr><tr><td><strong>Conventional Build</strong></td><td>~26 visits</td><td>Standard schedule. Insurance pays most.</td></tr></tbody></table>
+    </div>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h7');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H7</div><div class="related-card-title">Quick cost estimate</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h8');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H8</div><div class="related-card-title">Detailed cost calculator</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h10a');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H10a</div><div class="related-card-title">Print cost estimate</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="h10a" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">How-To &middot; H10a</a><span class="sep">/</span>
+      <span class="current">Print a cost estimate</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--green-soft);color:#047857;"><span class="dot" style="background:var(--green);width:5px;height:5px;border-radius:50%;"></span> How-To &middot; H10a</div>
+      <h1 class="article-title">Print a cost estimate</h1>
+      <p class="article-lede">Generate a print-ready Benefit Estimation Report to share with the patient or keep on file.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>2 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <div class="callout info"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div class="callout-body"><div class="callout-title">Before you print</div>Authorize &amp; Save Plan before printing to lock in your treatment selection and build type preference. Unsaved changes won&rsquo;t appear in the printed report.</div></div>
+    <div class="section" id="s1">
+      <div class="section-num">1</div>
+      <h2 class="section-title">Authorize and save</h2>
+      <p>Scroll to the bottom of the Cost Calculator and click <strong>Authorize &amp; Save Plan</strong>. This finalizes the treatment list and build type selection.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Authorize and Save Plan button &mdash; estimated grand total section</div>
+          <div class="screenshot-spec">assets/images/h10a/01-authorize-save.png &middot; 1100&times;300</div>
+        </div>
+    </div>
+    <div class="section" id="s2">
+      <div class="section-num">2</div>
+      <h2 class="section-title">Click Print</h2>
+      <p>Click the <strong>Print</strong> button in the top right of the Cost Calculator (visible in both Doctor View and Staff Edit). A Print Preview modal opens.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Print button location &mdash; top action bar</div>
+          <div class="screenshot-spec">assets/images/h10a/02-print-button.png &middot; 1100&times;72</div>
+        </div>
+    </div>
+    <div class="section" id="s3">
+      <div class="section-num">3</div>
+      <h2 class="section-title">Review and print</h2>
+      <p>The Print Preview shows the <strong>Benefit Estimation Report</strong>. Verify the contents before printing.</p><div class="screenshot-placeholder">
+          <div class="screenshot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+          <div class="screenshot-label">Screenshot needed</div>
+          <div class="screenshot-title">Print Preview modal &mdash; Benefit Estimation Report</div>
+          <div class="screenshot-spec">assets/images/h10a/03-print-preview.png &middot; 900&times;700</div>
+        </div><p>The report includes: Carrier and Plan Type, Coinsurance and Specialist Copay, Deductible Status (Individual/Family remaining), OOP Status, Coverage Details &amp; Requirements (Prior Auth, Referral, Pre-existing limitations), Recommended Services table with patient-owed costs, and Build type comparison (Rush/Cluster/Conventional) at the bottom.</p><ul class='bullet-list'><li>Click <strong>Print</strong> to send to a connected printer.</li><li>Click <strong>Download PDF</strong> to save locally.</li></ul>
+    </div>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h7');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H7</div><div class="related-card-title">Quick cost estimate</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h8');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H8</div><div class="related-card-title">Detailed cost calculator</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h10b');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H10b</div><div class="related-card-title">Email cost estimate</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="h10b" style="display:none"><div class="main-inner">
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;padding:48px;">
+      <div style="width:64px;height:64px;border-radius:16px;background:var(--surface-soft);display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">How-To &middot; H10b &middot; Coming Soon</div>
+      <h1 style="font-size:28px;font-weight:700;letter-spacing:-0.02em;color:var(--text-primary);margin-bottom:10px;">Email a cost estimate</h1>
+      <p style="font-size:15px;color:var(--text-secondary);max-width:400px;line-height:1.6;">User manual releasing soon.</p>
+    </div></div></div><div class="article" data-id="r1" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">Reference &middot; R1</a><span class="sep">/</span>
+      <span class="current">Status states</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--purple-soft);color:#6B21A8;"><span class="dot" style="background:var(--purple);width:5px;height:5px;border-radius:50%;"></span> Reference &middot; R1</div>
+      <h1 class="article-title">Status states</h1>
+      <p class="article-lede">Complete reference for every status a patient case can hold, and what it means for your workflow.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>1 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <table class="status-table" style="margin-top:24px;">
+      <thead><tr><th>Status</th><th>What it means</th><th>Editable?</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge" style="background:#F1F5F9;color:#475569;"><span class="badge-dot" style="background:#94A3B8;"></span>In Creation</span></td><td>Patient just added. Benefits inquiry running. Transient state &mdash; auto-resolves within 2 minutes. Not shown as a filter chip.</td><td>No</td></tr>
+        <tr><td><span class="badge draft"><span class="badge-dot"></span>In Draft</span></td><td>Benefits verified. Awaiting staff review and confirmation. Document is editable.</td><td>Yes</td></tr>
+        <tr><td><span class="badge finalized"><span class="badge-dot"></span>Cost Finalized</span></td><td>Cost estimate confirmed via Save &amp; Confirm. Document and cost plan are locked. A Re-VOB is required to make changes.</td><td>No</td></tr>
+        <tr><td><span class="badge pending"><span class="badge-dot"></span>Pending Action</span></td><td>System flagged a missing or ambiguous data point requiring staff input before the cost calculator can be used.</td><td>Yes</td></tr>
+        <tr><td><span class="badge inactive"><span class="badge-dot"></span>Inactive / Not Verified</span></td><td>Insurance returned as inactive or couldn&rsquo;t be verified. Patient may need to update their coverage before benefits can be run.</td><td>No</td></tr>
+      </tbody>
+    </table>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h1');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H1</div><div class="related-card-title">Navigate the dashboard</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('r2');return false;">
+          <div class="related-card-icon ref"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Reference &middot; R2</div><div class="related-card-title">Confidence flags</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('r3');return false;">
+          <div class="related-card-icon ref"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Reference &middot; R3</div><div class="related-card-title">Why a VOB may fail</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="r2" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">Reference &middot; R2</a><span class="sep">/</span>
+      <span class="current">Confidence flags</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--purple-soft);color:#6B21A8;"><span class="dot" style="background:var(--purple);width:5px;height:5px;border-radius:50%;"></span> Reference &middot; R2</div>
+      <h1 class="article-title">Confidence flags</h1>
+      <p class="article-lede">What the coloured circles next to patient names mean, and what action each calls for.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>1 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <p style="margin-top:24px;">Confidence is shown by the <strong>coloured circle</strong> to the right of the patient&rsquo;s avatar in the table. The same colour appears in the header banner when you open the patient record.</p>
+    <table class="status-table" style="margin-top:16px;">
+      <thead><tr><th>Colour</th><th>Meaning</th><th>Recommended action</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span style="display:inline-flex;align-items:center;gap:8px;"><span style="width:14px;height:14px;border-radius:50%;background:#10B981;display:inline-block;"></span><strong>Green</strong></span></td>
+          <td>High confidence. All required benefit fields were returned by the payer and validated.</td>
+          <td>Proceed to Cost Calculator.</td>
+        </tr>
+        <tr>
+          <td><span style="display:inline-flex;align-items:center;gap:8px;"><span style="width:14px;height:14px;border-radius:50%;background:#EF4444;display:inline-block;"></span><strong>Red</strong></span></td>
+          <td>Low confidence, inactive insurance, or invalid patient details. The payer returned a partial or error response.</td>
+          <td>Open the VOB document, read the flag and Comments section, attempt a retry. If unresolved, edit manually.</td>
+        </tr>
+        <tr>
+          <td><span style="display:inline-flex;align-items:center;gap:8px;"><span style="width:14px;height:14px;border-radius:50%;background:#94A3B8;display:inline-block;"></span><strong>Grey</strong></span></td>
+          <td>Unsupported payer. The system couldn&rsquo;t query this insurance carrier automatically.</td>
+          <td>A manual VOB is required. Contact your billing team or check <a href="#" onclick="showArticle('r4');return false;">R4: Supported payers</a>.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('r1');return false;">
+          <div class="related-card-icon ref"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Reference &middot; R1</div><div class="related-card-title">Status states</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('r3');return false;">
+          <div class="related-card-icon ref"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Reference &middot; R3</div><div class="related-card-title">Why a VOB may fail</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h5');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H5</div><div class="related-card-title">Handle a low-confidence VOB</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="r3" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">Reference &middot; R3</a><span class="sep">/</span>
+      <span class="current">Why a VOB may fail or get flagged</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--purple-soft);color:#6B21A8;"><span class="dot" style="background:var(--purple);width:5px;height:5px;border-radius:50%;"></span> Reference &middot; R3</div>
+      <h1 class="article-title">Why a VOB may fail or get flagged</h1>
+      <p class="article-lede">Plain-language guide to the most common reasons a benefits document comes back incomplete, and what to do about each.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>2 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <table class="status-table" style="margin-top:24px;">
+      <thead><tr><th>What you see</th><th>Likely reason</th><th>What to do</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Red confidence circle, &ldquo;Low confidence Benefits&rdquo; flag in document</strong></td><td>Payer returned partial or ambiguous data. Common with sparse payer responses (e.g. some BCBS state plans).</td><td>Attempt a retry. If unresolved, edit the document manually with data from a payer portal or call.</td></tr>
+        <tr><td><strong>Grey confidence circle</strong></td><td>Payer not yet supported in the system.</td><td>Manual VOB required. Check <a href="#" onclick="showArticle('r4');return false;">R4</a> for supported payers roadmap.</td></tr>
+        <tr><td><strong>Inactive / Not Verified status</strong></td><td>Insurance returned as inactive or member ID not found at the payer.</td><td>Confirm patient details with the patient or their insurance card. Re-run after correcting.</td></tr>
+        <tr><td><strong>OON (Out-of-Network) flag</strong></td><td>Payer returned OON benefits instead of in-network, or clinic is not contracted with the plan.</td><td>Confirm provider network status with payer. OON benefits still display &mdash; review for accuracy before using in the cost calculator.</td></tr>
+        <tr><td><strong>Comments section shows failure reason</strong></td><td>System-level error during the EDI/API call (timeout, invalid response format, NPI mismatch).</td><td>Retry the VOB. If limit reached (5 retries), contact support with the case.</td></tr>
+        <tr><td><strong>&ldquo;Not returned by payer&rdquo; in service benefits</strong></td><td>Payer didn&rsquo;t return benefit data for that specific CPT code.</td><td>Call the payer for that CPT, then edit the field manually in the VOB document.</td></tr>
+      </tbody>
+    </table>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('r2');return false;">
+          <div class="related-card-icon ref"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Reference &middot; R2</div><div class="related-card-title">Confidence flags</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h4');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H4</div><div class="related-card-title">Request a new VOB</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h5');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H5</div><div class="related-card-title">Handle a low-confidence VOB</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="r4" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">Reference &middot; R4</a><span class="sep">/</span>
+      <span class="current">Supported insurance payers</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--purple-soft);color:#6B21A8;"><span class="dot" style="background:var(--purple);width:5px;height:5px;border-radius:50%;"></span> Reference &middot; R4</div>
+      <h1 class="article-title">Supported insurance payers</h1>
+      <p class="article-lede">Current list of payers the system can automatically verify benefits for.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>1 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <p style="margin-top:24px;">Payer coverage is added progressively. If a payer isn&rsquo;t listed, a manual VOB is required for that patient.</p>
+    <h3 class="subsection-title" style="margin-top:24px;">National &amp; regional payers</h3>
+    <table class="status-table">
+      <thead><tr><th>Payer</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Aetna</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>Cigna</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>United Healthcare (UHC)</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>UMR (UHC subsidiary)</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>Surest (UHC)</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>Oxford (UHC)</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>AARP Supplemental / Medicare Supplement plans</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>Humana</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>Oscar</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>Medicare</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>Meritain Health</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>Fidelis</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>Emblem Health</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>Centene</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>New York City Employees PPO</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>Select Health</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>Empire State Plan</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+      </tbody>
+    </table>
+    <h3 class="subsection-title">BCBS plans</h3>
+    <table class="status-table">
+      <thead><tr><th>Plan</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Anthem BCBS Colorado</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>Anthem BCBS Georgia</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>Anthem BCBS California</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>BCBS Texas</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>BCBS New York</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>BCBS Arizona</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>BCBS Illinois</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>BCBS Minnesota</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+      </tbody>
+    </table>
+    <h3 class="subsection-title">Medicaid</h3>
+    <table class="status-table">
+      <thead><tr><th>Plan</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Medicaid Colorado</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+        <tr><td>Medicaid New York</td><td><span class="badge finalized"><span class="badge-dot"></span>Live</span></td></tr>
+      </tbody>
+    </table>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('r5');return false;">
+          <div class="related-card-icon ref"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Reference &middot; R5</div><div class="related-card-title">Supported CPT codes</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('r3');return false;">
+          <div class="related-card-icon ref"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Reference &middot; R3</div><div class="related-card-title">Why a VOB may fail</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="r5" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">Reference &middot; R5</a><span class="sep">/</span>
+      <span class="current">Supported CPT codes</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--purple-soft);color:#6B21A8;"><span class="dot" style="background:var(--purple);width:5px;height:5px;border-radius:50%;"></span> Reference &middot; R5</div>
+      <h1 class="article-title">Supported CPT codes</h1>
+      <p class="article-lede">Allergy and immunology procedure codes the system verifies and calculates costs for.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>1 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <p style="margin-top:24px;">Only CPT codes with coverage data returned by the payer can be added to the cost calculator. Codes not in this list will show as &ldquo;not returned by payer.&rdquo;</p>
+    <h3 class="subsection-title" style="margin-top:24px;">Allergy Testing</h3>
+    <table class="status-table">
+      <thead><tr><th>CPT Code</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>95004</code></td><td>Percutaneous (Scratch) Testing</td></tr>
+        <tr><td><code>95024</code></td><td>Intracutaneous (Intradermal) Testing</td></tr>
+        <tr><td><code>95044</code></td><td>Patch Testing</td></tr>
+      </tbody>
+    </table>
+    <h3 class="subsection-title">Immunotherapy</h3>
+    <table class="status-table">
+      <thead><tr><th>CPT Code</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>95165</code></td><td>Allergen Serum Preparation</td></tr>
+        <tr><td><code>95117</code></td><td>Immunotherapy Injections (2+)</td></tr>
+      </tbody>
+    </table>
+    <h3 class="subsection-title">Rapid Desensitization</h3>
+    <table class="status-table">
+      <thead><tr><th>CPT Code</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>95180</code></td><td>Rapid Desensitization &mdash; triggers Rush / Cluster / Conventional build type view in the cost calculator</td></tr>
+      </tbody>
+    </table>
+    <h3 class="subsection-title">Respiratory</h3>
+    <table class="status-table">
+      <thead><tr><th>CPT Code</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>94010</code></td><td>Spirometry</td></tr>
+        <tr><td><code>94375</code></td><td>Respiratory Flow Volume Loop</td></tr>
+      </tbody>
+    </table>
+    <h3 class="subsection-title">Office Visits &mdash; New Patient</h3>
+    <table class="status-table">
+      <thead><tr><th>CPT Code</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>99201</code></td><td>Office Visit &mdash; New Patient (Level 1)</td></tr>
+        <tr><td><code>99202</code></td><td>Office Visit &mdash; New Patient (Level 2)</td></tr>
+        <tr><td><code>99203</code></td><td>Office Visit &mdash; New Patient (Level 3)</td></tr>
+        <tr><td><code>99204</code></td><td>Office Visit &mdash; New Patient (Level 4)</td></tr>
+        <tr><td><code>99205</code></td><td>Office Visit &mdash; New Patient (Level 5)</td></tr>
+      </tbody>
+    </table>
+    <h3 class="subsection-title">Office Visits &mdash; Established Patient</h3>
+    <table class="status-table">
+      <thead><tr><th>CPT Code</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>99211</code></td><td>Office Visit &mdash; Established Patient (Level 1)</td></tr>
+        <tr><td><code>99212</code></td><td>Office Visit &mdash; Established Patient (Level 2)</td></tr>
+        <tr><td><code>99213</code></td><td>Office Visit &mdash; Established Patient (Level 3)</td></tr>
+        <tr><td><code>99214</code></td><td>Office Visit &mdash; Established Patient (Level 4)</td></tr>
+        <tr><td><code>99215</code></td><td>Office Visit &mdash; Established Patient (Level 5)</td></tr>
+      </tbody>
+    </table>
+    <h3 class="subsection-title">Oral Food Challenge</h3>
+    <table class="status-table">
+      <thead><tr><th>CPT Code</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>95076</code></td><td>Ingestion (Oral Food) Challenge &mdash; initial 120 minutes</td></tr>
+        <tr><td><code>95079</code></td><td>Ingestion Challenge &mdash; each additional 60 minutes</td></tr>
+      </tbody>
+    </table>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('r4');return false;">
+          <div class="related-card-icon ref"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Reference &middot; R4</div><div class="related-card-title">Supported payers</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('a2');return false;">
+          <div class="related-card-icon "><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Appendix &middot; A2</div><div class="related-card-title">Allergy CPT glossary</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="e1" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">Explanation &middot; E1</a><span class="sep">/</span>
+      <span class="current">How patients land on the dashboard</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--amber-soft);color:#92400E;"><span class="dot" style="background:var(--amber);width:5px;height:5px;border-radius:50%;"></span> Explanation &middot; E1</div>
+      <h1 class="article-title">How patients land on the dashboard</h1>
+      <p class="article-lede">How the system automatically populates the verification queue &mdash; and when manual adds are needed.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>1 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <div class="section" style="margin-top:32px;">
+      <h2 class="section-title">Automated &mdash; pre-scheduled appointments (primary path)</h2>
+      <p>The system runs on a configured schedule and automatically generates VOBs for upcoming appointments. No staff action is required.</p>
+      <ul class="bullet-list">
+        <li>Runs are typically triggered <strong>3 days prior</strong> to the appointment and again <strong>day of appointment</strong> to catch any late additions.</li>
+        <li>Only appointments matching the <strong>configured appointment types</strong> are included. Your tenant configuration defines which appointment types are eligible &mdash; or all appointments can be included.</li>
+        <li>The run schedule and appointment type filters are set per clinic. See <a href="#" onclick="showArticle('a3');return false;">A3: Tenant settings</a> for what&rsquo;s configurable.</li>
+        <li>Patients appear on the dashboard automatically in <strong>In Draft</strong> status once the VOB is complete &mdash; no manual trigger needed.</li>
+      </ul>
+    </div>
+    <div class="section">
+      <h2 class="section-title">Manual add &mdash; exception path</h2>
+      <p>Used for walk-ins, same-day appointments not covered by the scheduled run, or urgent cases. Staff initiate this directly from the dashboard Operations panel.</p>
+      <p>See <a href="#" onclick="showArticle('h2a');return false;"><strong>H2: Start a benefits inquiry</strong></a> for the full how-to.</p>
+    </div>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h1');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H1</div><div class="related-card-title">Navigate the dashboard</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h2a');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H2a</div><div class="related-card-title">Add a single patient</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('a3');return false;">
+          <div class="related-card-icon "><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Appendix &middot; A3</div><div class="related-card-title">Tenant settings</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="e2" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">Explanation &middot; E2</a><span class="sep">/</span>
+      <span class="current">How retries work</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--amber-soft);color:#92400E;"><span class="dot" style="background:var(--amber);width:5px;height:5px;border-radius:50%;"></span> Explanation &middot; E2</div>
+      <h1 class="article-title">How retries work</h1>
+      <p class="article-lede">What happens behind the scenes when a VOB fails and how the system tries to recover automatically.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>2 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <div class="section" style="margin-top:32px;">
+      <h2 class="section-title">Automatic system retries</h2>
+      <p>When a VOB call fails due to a recoverable error, the system retries automatically before surfacing a failure to the dashboard.</p>
+      <table class="status-table">
+        <thead><tr><th>Attempt</th><th>Delay</th></tr></thead>
+        <tbody>
+          <tr><td>Retry 1</td><td>Immediate</td></tr>
+          <tr><td>Retry 2</td><td>1 minute</td></tr>
+          <tr><td>Retry 3+</td><td>Exponential backoff (doubles each time)</td></tr>
+          <tr><td>Max window</td><td>8 hours</td></tr>
+        </tbody>
+      </table>
+      <p>Automatic retries apply to recoverable errors &mdash; timeouts, rate limits (429), and standard EDI error codes (42, 80).</p>
+    </div>
+    <div class="section">
+      <h2 class="section-title">Agentic retry layer</h2>
+      <p>For cases where simple retry won&rsquo;t help, the system can attempt alternate approaches:</p>
+      <ul class="bullet-list">
+        <li>Retry with alternate NPIs (if multiple providers are configured)</li>
+        <li>Retry with alternate payer routing or state mappings</li>
+        <li>Retry with normalized patient name formats</li>
+      </ul>
+      <p>Agentic retries do not modify original patient data or permanently overwrite source demographics.</p>
+    </div>
+    <div class="section">
+      <h2 class="section-title">Manual retries (staff-initiated)</h2>
+      <p>Staff can manually trigger a Re-VOB from within the patient record. This is a different action from automatic retries &mdash; it re-runs the full benefits inquiry process and will overwrite any manual edits made to the document.</p>
+      <p><strong>Limit:</strong> 5 manual retries per service date. After this limit, no further retries are possible for that appointment date.</p>
+      <p>See <a href="#" onclick="showArticle('h4');return false;">H4: Request a new VOB</a> for the full how-to.</p>
+    </div>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h4');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H4</div><div class="related-card-title">Request a new VOB</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('r3');return false;">
+          <div class="related-card-icon ref"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Reference &middot; R3</div><div class="related-card-title">Why a VOB may fail</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('e3');return false;">
+          <div class="related-card-icon "><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Explanation &middot; E3</div><div class="related-card-title">How costs are calculated</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="e3" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">Explanation &middot; E3</a><span class="sep">/</span>
+      <span class="current">How costs are calculated</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--amber-soft);color:#92400E;"><span class="dot" style="background:var(--amber);width:5px;height:5px;border-radius:50%;"></span> Explanation &middot; E3</div>
+      <h1 class="article-title">How costs are calculated</h1>
+      <p class="article-lede">How the system turns payer benefit data into patient responsibility figures.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>2 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <div class="section" style="margin-top:32px;">
+      <h2 class="section-title">Step 1 &mdash; Fee schedules (allowed amounts)</h2>
+      <p>Every CPT code has a contracted <strong>allowed amount</strong> per payer &mdash; what the insurance carrier has agreed to pay for that service. These are stored in your clinic&rsquo;s fee schedules and updated periodically.</p>
+      <p>Allowed amounts are the starting point for every cost calculation. If an allowed amount is incorrect for a payer, it can be edited in the Staff Edit view before confirming.</p>
+    </div>
+    <div class="section">
+      <h2 class="section-title">Step 2 &mdash; Cost share logic</h2>
+      <p>Patient responsibility is calculated in this order for each CPT code:</p>
+      <ul class="bullet-list">
+        <li><strong>Copay</strong> &mdash; if applicable, applied first regardless of deductible status. A copay is assessed whether or not deductible has been met.</li>
+        <li><strong>Deductible</strong> &mdash; applied next, from top to bottom based on treatment order in the table. The deductible balance is exhausted progressively as you move down the service list. This is why treatment order matters in the Staff Edit view.</li>
+        <li><strong>Coinsurance</strong> &mdash; once the deductible is met, the patient pays their coinsurance percentage of the remaining allowed amount.</li>
+        <li><strong>Out-of-Pocket cap</strong> &mdash; once individual or family OOP is exhausted, the patient owes $0 for subsequent services.</li>
+      </ul>
+    </div>
+    <div class="section">
+      <h2 class="section-title">Step 3 &mdash; Dynamic recalculation</h2>
+      <p>Costs recalculate in real time as you add, remove, or reorder treatments. The <strong>Estimated Grand Total</strong> at the bottom of the calculator reflects the cumulative patient responsibility across all included services.</p>
+      <p>Per-visit costs (excluded from the total via the Include toggle) are shown separately below the grand total.</p>
+      <div class="callout info"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div class="callout-body">The cost estimate is based on current benefit data and fee schedules. Final costs may vary based on how the insurance carrier processes the actual claim &mdash; this is noted in the disclaimer on every printed report.</div></div>
+    </div>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h7');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H7</div><div class="related-card-title">Quick cost estimate</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('h8');return false;">
+          <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">How-To &middot; H8</div><div class="related-card-title">Detailed cost calculator</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('a1');return false;">
+          <div class="related-card-icon "><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Appendix &middot; A1</div><div class="related-card-title">Insurance terminology</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="a1" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">Appendix &middot; A1</a><span class="sep">/</span>
+      <span class="current">Insurance terminology</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--surface-soft);color:var(--text-secondary);"><span class="dot" style="background:var(--text-muted);width:5px;height:5px;border-radius:50%;"></span> Appendix &middot; A1</div>
+      <h1 class="article-title">Insurance terminology</h1>
+      <p class="article-lede">Plain-language definitions of the insurance terms you&rsquo;ll encounter in benefits documents and cost calculations.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>2 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <table class="status-table" style="margin-top:24px;">
+      <thead><tr><th>Term</th><th>Plain-language definition</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Deductible</strong></td><td>The amount a patient pays out of pocket before insurance starts covering costs. Resets each benefit year. Individual and family deductibles track separately.</td></tr>
+        <tr><td><strong>Out-of-Pocket Maximum (OOP)</strong></td><td>The most a patient will pay in a year before insurance covers 100%. Once reached, the patient owes $0 for covered services. Includes deductible + coinsurance + copays (in most plans).</td></tr>
+        <tr><td><strong>Coinsurance</strong></td><td>The percentage of costs the patient pays <em>after</em> the deductible is met. If coinsurance is 20%, the patient pays 20% and insurance pays 80%.</td></tr>
+        <tr><td><strong>Copay</strong></td><td>A fixed dollar amount charged per visit or service, regardless of deductible status. A $40 office copay is owed whether or not the deductible is met.</td></tr>
+        <tr><td><strong>Copay applies before deductible</strong></td><td>When a plan has both a copay and a deductible for a service, the copay is charged first. The deductible balance is separate and irrelevant to whether the copay applies.</td></tr>
+        <tr><td><strong>In-Network</strong></td><td>The provider has a contract with the insurance carrier. Lower cost share for the patient.</td></tr>
+        <tr><td><strong>Out-of-Network (OON)</strong></td><td>No contract with the carrier. Patient pays more, sometimes everything. OON benefits still display in the system if returned by the payer.</td></tr>
+        <tr><td><strong>Prior Authorization (Prior Auth)</strong></td><td>Approval required from the insurance carrier before certain services are covered. If Prior Auth Required shows &ldquo;Yes,&rdquo; the clinic must obtain authorization before the visit.</td></tr>
+        <tr><td><strong>Referral Required</strong></td><td>Some HMO plans require a referral from the patient&rsquo;s PCP before seeing a specialist. If shown as &ldquo;Yes,&rdquo; confirm the referral is in place.</td></tr>
+        <tr><td><strong>Benefit Year</strong></td><td>The 12-month period over which deductible and OOP accumulators are tracked. Most plans follow a calendar year (Jan&ndash;Dec) but some use custom fiscal years. When the benefit year resets, deductible and OOP start over from zero.</td></tr>
+        <tr><td><strong>Plan Year</strong></td><td>The period covered by the insurance policy. Often aligns with benefit year. Shown as &ldquo;Calendar&rdquo; or a specific date range.</td></tr>
+        <tr><td><strong>Split billing</strong></td><td>When services from the same visit are billed across multiple CPT codes, each potentially subject to different cost-share rules. The order of claims processing can affect how deductible is applied.</td></tr>
+      </tbody>
+    </table>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('a2');return false;">
+          <div class="related-card-icon "><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Appendix &middot; A2</div><div class="related-card-title">Allergy CPT glossary</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('e3');return false;">
+          <div class="related-card-icon "><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Explanation &middot; E3</div><div class="related-card-title">How costs are calculated</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="a2" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">Appendix &middot; A2</a><span class="sep">/</span>
+      <span class="current">Allergy CPT glossary</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--surface-soft);color:var(--text-secondary);"><span class="dot" style="background:var(--text-muted);width:5px;height:5px;border-radius:50%;"></span> Appendix &middot; A2</div>
+      <h1 class="article-title">Allergy CPT glossary</h1>
+      <p class="article-lede">Quick reference for the allergy and immunology procedure codes used throughout the system.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>1 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <table class="status-table" style="margin-top:24px;">
+      <thead><tr><th>Code</th><th>Description</th><th>Category</th></tr></thead>
+      <tbody>
+        <tr><td><code>95004</code></td><td>Percutaneous (Scratch) Testing</td><td>Allergy Testing</td></tr>
+        <tr><td><code>95024</code></td><td>Intracutaneous (Intradermal) Testing</td><td>Allergy Testing</td></tr>
+        <tr><td><code>95044</code></td><td>Patch Testing</td><td>Allergy Testing</td></tr>
+        <tr><td><code>95165</code></td><td>Allergen Serum Preparation</td><td>Immunotherapy</td></tr>
+        <tr><td><code>95117</code></td><td>Immunotherapy Injections (2+)</td><td>Immunotherapy</td></tr>
+        <tr><td><code>95180</code></td><td>Rapid Desensitization &mdash; triggers Rush / Cluster / Conventional build type view in the cost calculator</td><td>Rapid Desensitization</td></tr>
+        <tr><td><code>94010</code></td><td>Spirometry</td><td>Respiratory</td></tr>
+        <tr><td><code>94375</code></td><td>Respiratory Flow Volume Loop</td><td>Respiratory</td></tr>
+        <tr><td><code>99201</code></td><td>Office Visit &mdash; New Patient (Level 1)</td><td>Office Visit</td></tr>
+        <tr><td><code>99202</code></td><td>Office Visit &mdash; New Patient (Level 2)</td><td>Office Visit</td></tr>
+        <tr><td><code>99203</code></td><td>Office Visit &mdash; New Patient (Level 3)</td><td>Office Visit</td></tr>
+        <tr><td><code>99204</code></td><td>Office Visit &mdash; New Patient (Level 4)</td><td>Office Visit</td></tr>
+        <tr><td><code>99205</code></td><td>Office Visit &mdash; New Patient (Level 5)</td><td>Office Visit</td></tr>
+        <tr><td><code>99211</code></td><td>Office Visit &mdash; Established Patient (Level 1)</td><td>Office Visit</td></tr>
+        <tr><td><code>99212</code></td><td>Office Visit &mdash; Established Patient (Level 2)</td><td>Office Visit</td></tr>
+        <tr><td><code>99213</code></td><td>Office Visit &mdash; Established Patient (Level 3)</td><td>Office Visit</td></tr>
+        <tr><td><code>99214</code></td><td>Office Visit &mdash; Established Patient (Level 4)</td><td>Office Visit</td></tr>
+        <tr><td><code>99215</code></td><td>Office Visit &mdash; Established Patient (Level 5)</td><td>Office Visit</td></tr>
+        <tr><td><code>95076</code></td><td>Ingestion (Oral Food) Challenge &mdash; initial 120 minutes</td><td>Oral Food Challenge</td></tr>
+        <tr><td><code>95079</code></td><td>Ingestion Challenge &mdash; each additional 60 minutes</td><td>Oral Food Challenge</td></tr>
+      </tbody>
+    </table>
+    <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('r5');return false;">
+          <div class="related-card-icon ref"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Reference &middot; R5</div><div class="related-card-title">Supported CPT codes</div></div>
+        </a><a href="#" class="related-card" onclick="showArticle('a1');return false;">
+          <div class="related-card-icon "><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="related-card-text"><div class="related-card-label">Appendix &middot; A1</div><div class="related-card-title">Insurance terminology</div></div>
+        </a></div></div>
+    </div></div><div class="article" data-id="a3" style="display:none"><div class="main-inner">
+    
+    <div class="breadcrumb">
+      <a href="#" onclick="return false">Help Center</a><span class="sep">/</span>
+      <a href="#" onclick="return false">Appendix &middot; A3</a><span class="sep">/</span>
+      <span class="current">Tenant-configurable settings</span>
+    </div>
+    <div class="article-header">
+      <div class="article-kicker" style="background:var(--surface-soft);color:var(--text-secondary);"><span class="dot" style="background:var(--text-muted);width:5px;height:5px;border-radius:50%;"></span> Appendix &middot; A3</div>
+      <h1 class="article-title">Tenant-configurable settings</h1>
+      <p class="article-lede">Settings configured per clinic by the Maya PA implementation team.</p>
+      <div class="article-meta">
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>1 min read</div>
+        <div class="article-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>Version 2.3 &middot; June 2026</div>
+      </div>
+    </div>
+    <p style="margin-top:24px;">These settings are not adjustable from within the product UI. Contact your Maya PA implementation team to request changes.</p>
+    <table class="status-table" style="margin-top:16px;">
+      <thead><tr><th>Setting</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Schedule for trigger</strong></td><td>When automated VOB runs fire &mdash; typically 3 days prior and day of appointment. The schedule is configurable per clinic needs.</td></tr>
+        <tr><td><strong>Appointment types</strong></td><td>Which appointment types from the EHR are included in automated runs. Can be set to specific types (e.g. new patient only) or all appointments.</td></tr>
+        <tr><td><strong>Fee schedules</strong></td><td>Contracted allowed amounts per CPT code per insurance payer. Configurable for each payer individually. Must be updated when re-contracted rates change.</td></tr>
+        <tr><td><strong>VOB templates and disclaimers</strong></td><td>The layout and disclaimer text on the benefits document and printed cost estimate report. Customizable per tenant branding and legal requirements.</td></tr>
+      </tbody>
+    </table>
+    </div></div>
+</main>
+</div>
+<script>
+function showArticle(id) {
+  document.querySelectorAll('.article').forEach(a => a.style.display = 'none');
+  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+  var art = document.querySelector('.article[data-id="' + id + '"]');
+  if (art) { art.style.display = 'block'; }
+  var activeLinks = document.querySelectorAll('[data-target="' + id + '"]');
+  activeLinks.forEach(function(l) {
+    l.classList.add('active');
+    // Auto-expand the section containing this link
+    var section = l.closest('.sidebar-section');
+    if (section) section.classList.remove('collapsed');
+  });
+  window.scrollTo(0, 0);
+}
+
+function toggleSection(labelEl) {
+  labelEl.parentElement.classList.toggle('collapsed');
+}
+
+// Set H0 as default active in sidebar
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('[data-target="h0"]').forEach(l => l.classList.add('active'));
+});
+</script>
+</body>
+</html>

@@ -135,6 +135,26 @@ ul.bullet-list li strong{color:var(--text-primary);}
 .feedback-btn{padding:7px 14px;background:white;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:var(--sans);font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all .15s;}
 .feedback-btn:hover{border-color:var(--brand);color:var(--brand);}
 @media(max-width:900px){.layout{grid-template-columns:1fr;}.sidebar{display:none;}.main-inner{padding:28px 20px;}}
+
+/* LOGIN OVERLAY */
+#login-overlay{position:fixed;inset:0;z-index:9999;background:#F8FAFC;display:flex;align-items:center;justify-content:center;font-family:var(--sans);}
+#login-overlay.hidden{display:none;}
+.login-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:40px 36px;width:100%;max-width:380px;box-shadow:0 8px 32px rgba(15,23,42,.10);}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+.login-logo img{height:32px;}
+.login-logo-title{font-size:14px;font-weight:700;color:var(--text-primary);}
+.login-heading{font-size:22px;font-weight:700;color:var(--text-primary);margin-bottom:4px;}
+.login-sub{font-size:13px;color:var(--text-muted);margin-bottom:24px;}
+.login-field{margin-bottom:16px;}
+.login-field label{display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;letter-spacing:.3px;text-transform:uppercase;}
+.login-field input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:var(--sans);color:var(--text-primary);background:#fff;outline:none;transition:border-color .15s;}
+.login-field input:focus{border-color:var(--brand);}
+.login-btn{width:100%;padding:11px;background:var(--brand);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;font-family:var(--sans);cursor:pointer;margin-top:4px;transition:opacity .15s;}
+.login-btn:hover{opacity:.88;}
+.login-error{display:none;margin-top:12px;padding:9px 12px;background:var(--red-soft);border:1px solid #FECACA;border-radius:var(--radius-sm);font-size:13px;color:var(--red);}
+.login-error.show{display:block;}
+@keyframes login-shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.login-card.shake{animation:login-shake .35s ease;}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1P43YPMWQQ"></script>
@@ -149,6 +169,28 @@ ul.bullet-list li strong{color:var(--text-primary);}
 </script>
 </head>
 <body>
+<div id="login-overlay">
+  <div class="login-card" id="login-card">
+    <div class="login-logo">
+      <img src="assets/logo/maya-vob-logo.png" alt="RagaAI Clinical Ops">
+      <span class="login-logo-title">RagaAI Clinical Ops</span>
+    </div>
+    <div class="login-heading">Sign in</div>
+    <p class="login-sub">Enter your credentials to access the usage guide.</p>
+    <form id="login-form" onsubmit="handleLogin(event)">
+      <div class="login-field">
+        <label>Username</label>
+        <input type="text" id="login-user" autocomplete="username" placeholder="Username" required>
+      </div>
+      <div class="login-field">
+        <label>Password</label>
+        <input type="password" id="login-pass" autocomplete="current-password" placeholder="Password" required>
+      </div>
+      <button type="submit" class="login-btn">Sign in</button>
+      <div class="login-error" id="login-error">Incorrect username or password.</div>
+    </form>
+  </div>
+</div>
 <header class="topbar">
   <div class="topbar-left">
     <img src="assets/logo/maya-vob-logo.png" alt="RagaAI Clinical Ops" class="brand-logo-img" onerror="this.style.display='none'">
@@ -1349,6 +1391,41 @@ document.addEventListener('DOMContentLoaded', function() {
       if (id === 'r5') loadSheet(CPT_GID, 'r5-live-data', renderCPT, 'r5');
     }
   });
+})();
+</script>
+<script>
+(function() {
+  var CREDS = [
+    {u:'AdminRaga', p:'Raga@123'},
+    {u:'AdminClinic', p:'Allergy@123'}
+  ];
+  var AUTH_KEY = 'ragaai_docs_auth';
+
+  function showApp() {
+    var el = document.getElementById('login-overlay');
+    if (el) el.classList.add('hidden');
+  }
+
+  // Check existing session
+  if (localStorage.getItem(AUTH_KEY) === '1') { showApp(); }
+
+  window.handleLogin = function(e) {
+    e.preventDefault();
+    var u = document.getElementById('login-user').value.trim();
+    var p = document.getElementById('login-pass').value;
+    var ok = CREDS.some(function(c) { return c.u === u && c.p === p; });
+    if (ok) {
+      localStorage.setItem(AUTH_KEY, '1');
+      showApp();
+    } else {
+      var card = document.getElementById('login-card');
+      var err = document.getElementById('login-error');
+      err.classList.add('show');
+      card.classList.remove('shake');
+      void card.offsetWidth; // reflow to restart animation
+      card.classList.add('shake');
+    }
+  };
 })();
 </script>
 </body>

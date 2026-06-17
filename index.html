@@ -500,18 +500,36 @@ ul.bullet-list li strong{color:var(--text-primary);}
     </div>
     <div class="section" id="s1">
       <div class="section-num">1</div>
-      <h2 class="section-title">Open the patient record</h2>
-      <p>Click the patient row on the dashboard to open their Verification Hub.</p>
+      <h2 class="section-title">Open the patient record and click Retry VOB</h2>
+      <p>Click the patient row on the dashboard to open their Verification Hub, then click the <strong>Retry VOB</strong> button in the top action bar.</p>
+      <img src="assets/images/h4/01-retry-vob%20button.png" alt="Retry VOB button in the top action bar" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s2">
       <div class="section-num">2</div>
-      <h2 class="section-title">Click Retry VOB</h2>
-      <img src="assets/images/h4/01-retry-vob-button.png" alt="Retry VOB button in top action bar" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><p>A confirmation modal appears. It warns that re-running will overwrite any manual changes you&rsquo;ve made to the coverage summary and treatments.</p><img src="assets/images/h4/02-retry-modal.png" alt="Retry and Reset confirmation modal" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <h2 class="section-title">Retry &amp; Reset VOB modal opens</h2>
+      <p>The <strong>Retry &amp; Reset VOB</strong> modal appears. It shows the patient&rsquo;s current identity on the left and the retry options on the right, including the remaining attempts counter.</p>
+      <img src="assets/images/h4/02-edit-details-to-retry.png" alt="Retry and Reset VOB modal with patient identity preview and retry options" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s3">
       <div class="section-num">3</div>
-      <h2 class="section-title">Confirm</h2>
-      <p>Click <strong>Retry and Reset</strong> to proceed. The system re-runs the eligibility check. The patient status returns to <strong>In Draft</strong> once complete.</p><div class="callout warning"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div class="callout-body"><div class="callout-title">Retry limit</div>For a given service date, there is a maximum of <strong>5 retries</strong>. Once reached, no further retries are possible for that appointment.</div></div>
+      <h2 class="section-title">(Optional) Edit patient details</h2>
+      <p>If the patient&rsquo;s information needs correction before retrying, click <strong>Edit Details</strong>. The patient record expands inline — update the name, DOB, carrier, or member ID as needed.</p>
+      <img src="assets/images/h4/03-edit-details-as-required.png" alt="Patient identity fields expanded for editing — name, DOB, carrier, member ID" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>Click <strong>Done Editing</strong> when finished to collapse the edit panel.</p>
+      <img src="assets/images/h4/04-select-done-editing.png" alt="Done Editing button to close the edit panel" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+    </div>
+    <div class="section" id="s4">
+      <div class="section-num">4</div>
+      <h2 class="section-title">Select a Billing NPI <span style="color:#EF4444;font-size:0.85em;font-weight:600;margin-left:6px;">Required</span></h2>
+      <p>Choose the appropriate NPI from the <strong>Billing NPI</strong> dropdown. This field is mandatory — the retry cannot be submitted without it.</p>
+      <img src="assets/images/h4/05-select-npi.png" alt="Billing NPI dropdown — mandatory field highlighted" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+    </div>
+    <div class="section" id="s5">
+      <div class="section-num">5</div>
+      <h2 class="section-title">Enter a retry reason and confirm</h2>
+      <p>Fill in the <strong>Retry Reason</strong> field, then click <strong>Retry &amp; Reset</strong> to re-run the eligibility check. The patient status returns to <strong>In Draft</strong> once complete.</p>
+      <img src="assets/images/h4/06-retry-and-reset.png" alt="Retry reason filled and Retry and Reset button active" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <div class="callout warning"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div class="callout-body"><div class="callout-title">Retry limit</div>Each service date allows a maximum of <strong>3 retries</strong>. Once reached, no further retries are possible for that appointment.</div></div>
     </div>
     <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h5');return false;">
           <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>

@@ -1303,7 +1303,9 @@ ul.bullet-list li strong{color:var(--text-primary);}
 </main>
 </div>
 <script>
-function showArticle(id) {
+var _validArticleIds = ['t1','h0','h1','h2a','h2b','h3','h4','h5','h6','h7','h8','h9','h10a','h10b','r1','r2','r3','r4','r5','e1','e2','e3','a1','a2','a3'];
+
+function showArticle(id, _noPush) {
   document.querySelectorAll('.article').forEach(a => a.style.display = 'none');
   document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
   var art = document.querySelector('.article[data-id="' + id + '"]');
@@ -1311,11 +1313,11 @@ function showArticle(id) {
   var activeLinks = document.querySelectorAll('[data-target="' + id + '"]');
   activeLinks.forEach(function(l) {
     l.classList.add('active');
-    // Auto-expand the section containing this link
     var section = l.closest('.sidebar-section');
     if (section) section.classList.remove('collapsed');
   });
   window.scrollTo(0, 0);
+  if (!_noPush) history.pushState(null, '', '#' + id);
   // GA4 SPA navigation tracking
   var _articleNames = {"t1": "Get Started with RagaAI Clinical Ops", "h0": "Accessing Insurance VOB", "h1": "Navigate the Dashboard", "h2a": "Start a Benefits Inquiry", "h2b": "Upload Patients in Bulk", "h3": "Access and Print a VOB", "h4": "Retrying a VOB", "h5": "Handle a Low-Confidence VOB", "h6": "Edit a VOB", "h7": "Quick Cost Estimate", "h8": "Detailed Cost Calculator", "h9": "Select Build Types", "h10a": "Share Cost Estimate", "h10b": "Email Cost Estimate", "r1": "Status States", "r2": "Confidence Flags", "r3": "Why a VOB May Fail", "r4": "Supported Payers", "r5": "Supported CPT Codes", "e1": "How Patients Land Here", "e2": "How Retries Work", "e3": "How Costs Are Calculated", "a1": "Insurance Terminology", "a2": "Allergy CPT Glossary", "a3": "Tenant Settings"};
   if (typeof gtag !== 'undefined') {
@@ -1331,9 +1333,18 @@ function toggleSection(labelEl) {
   labelEl.parentElement.classList.toggle('collapsed');
 }
 
-// Set H0 as default active in sidebar
+// Hash-aware routing: navigate to article on load, handle browser back/forward
 document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('[data-target="h0"]').forEach(l => l.classList.add('active'));
+  if (localStorage.getItem('ragaai_docs_auth') !== '1') return;
+  var hash = location.hash.replace('#', '').trim();
+  var target = (hash && _validArticleIds.indexOf(hash) !== -1) ? hash : 'h0';
+  showArticle(target, true);
+});
+
+window.addEventListener('popstate', function() {
+  if (localStorage.getItem('ragaai_docs_auth') !== '1') return;
+  var hash = location.hash.replace('#', '').trim();
+  if (hash && _validArticleIds.indexOf(hash) !== -1) showArticle(hash, true);
 });
 </script>
 
@@ -1433,10 +1444,10 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   }
 
-  // Hook into showArticle
+  // Hook into showArticle (pass _noPush through so popstate/DOMContentLoaded don't double-push history)
   var _origShowArticle = window.showArticle;
-  window.showArticle = function(id) {
-    _origShowArticle(id);
+  window.showArticle = function(id, _noPush) {
+    _origShowArticle(id, _noPush);
     if (id === 'r4') loadSheet(PAYERS_GID, 'r4-live-data', renderPayers, 'r4');
     if (id === 'r5') loadSheet(CPT_GID, 'r5-live-data', renderCPT, 'r5');
   };
@@ -1459,13 +1470,20 @@ document.addEventListener('DOMContentLoaded', function() {
     {u:'AdminClinic', p:'Allergy@123'}
   ];
   var AUTH_KEY = 'ragaai_docs_auth';
+  var REDIRECT_KEY = 'ragaai_docs_redirect';
+
+  // Save the hash from the URL so we can redirect there after login
+  var incomingHash = location.hash.replace('#', '').trim();
+  if (incomingHash && typeof _validArticleIds !== 'undefined' && _validArticleIds.indexOf(incomingHash) !== -1) {
+    sessionStorage.setItem(REDIRECT_KEY, incomingHash);
+  }
 
   function showApp() {
     var el = document.getElementById('login-overlay');
     if (el) el.classList.add('hidden');
   }
 
-  // Check existing session
+  // Already logged in — DOMContentLoaded handler will navigate to the hash
   if (localStorage.getItem(AUTH_KEY) === '1') { showApp(); }
 
   window.handleLogin = function(e) {
@@ -1476,6 +1494,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (ok) {
       localStorage.setItem(AUTH_KEY, '1');
       showApp();
+      // Navigate to the article they originally requested, or default to h0
+      var redirect = sessionStorage.getItem(REDIRECT_KEY) || 'h0';
+      sessionStorage.removeItem(REDIRECT_KEY);
+      if (typeof showArticle === 'function') showArticle(redirect, true);
     } else {
       var card = document.getElementById('login-card');
       var err = document.getElementById('login-error');

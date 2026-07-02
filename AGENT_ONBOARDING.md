@@ -115,20 +115,78 @@ prior-auth,pa-h1,2,pa-h1-step2.png,Detail view of a single auth record,Click any
 
 ---
 
-## Phase 2 — Create the Asset Folder Structure
+## Phase 2 — Organize the Asset Folder
 
-For each new agent, create the folder tree under `assets/images/{agent_id}/`. Each article that has screenshots gets its own subfolder.
+The user will supply a folder of raw image files. These are typically unorganized — arbitrary names, flat structure, maybe mixed formats. This phase turns them into the correct layout before any HTML is written.
+
+### 2.1 — Audit the user's folder
+
+Ask the user to share or describe the folder. List all image files:
 
 ```bash
-# Example for prior-auth
-mkdir -p "assets/images/prior-auth/pa-h0"
-mkdir -p "assets/images/prior-auth/pa-h1"
-# ... one folder per article_id where has_steps = true
+find assets/images/raw-input -type f | sort
 ```
 
-Place the image files at: `assets/images/{agent_id}/{article_id}/{filename}`
+You will see something like:
+```
+prior-auth/raw-input/screenshot1.png
+prior-auth/raw-input/Screenshot 2026-07-01 step2.png
+prior-auth/raw-input/form-fill.png
+...
+```
 
-Reference them in HTML as: `src="assets/images/{agent_id}/{article_id}/{filename}"`
+### 2.2 — Map raw files to `images.csv`
+
+Cross-reference every file in the user's folder against `images.csv`. For each row in `images.csv`, identify which raw file corresponds to it. Ask the user to clarify any ambiguous mapping — e.g. if two screenshots look like they could both be `pa-h0-step2`.
+
+Build a rename plan:
+
+| Raw filename | → Target path |
+|---|---|
+| `screenshot1.png` | `assets/images/prior-auth/pa-h0/pa-h0-step1.png` |
+| `Screenshot 2026-07-01 step2.png` | `assets/images/prior-auth/pa-h0/pa-h0-step2.png` |
+| `form-fill.png` | `assets/images/prior-auth/pa-h0/pa-h0-step3.png` |
+
+Present this plan to the user and confirm before executing.
+
+### 2.3 — Execute: create folders, rename, move
+
+```bash
+# Create folder structure
+mkdir -p "assets/images/prior-auth/pa-h0"
+mkdir -p "assets/images/prior-auth/pa-h1"
+# one folder per article_id where has_steps = true in articles.csv
+
+# Rename and move files per the confirmed plan
+mv "path/to/screenshot1.png" "assets/images/prior-auth/pa-h0/pa-h0-step1.png"
+mv "path/to/Screenshot 2026-07-01 step2.png" "assets/images/prior-auth/pa-h0/pa-h0-step2.png"
+# ...
+```
+
+### 2.4 — Verify completeness
+
+After moving, confirm every row in `images.csv` has a matching file:
+
+```bash
+# For each expected file from images.csv, check it exists
+ls assets/images/prior-auth/pa-h0/
+ls assets/images/prior-auth/pa-h1/
+```
+
+If any file is missing, flag it to the user before proceeding. Do not write HTML `<img>` tags for images that don't exist yet — the `onerror` handler will silently hide them on the live site, which is fine, but you should note the gap.
+
+### 2.5 — Update `images.csv` if filenames changed
+
+If any files were renamed during the process, update the `filename` column in `images.csv` to reflect the final filenames. The HTML in Phase 3 will be generated from this corrected CSV.
+
+**Naming convention (canonical):**
+- Pattern: `{article_id}-step{N}.png`
+- Examples: `pa-h0-step1.png`, `pa-h1-step2.png`
+- No spaces. No uppercase. No special characters except hyphens.
+- Format: PNG preferred. JPG acceptable. No WebP (Vercel serves these fine but keep it simple).
+
+**Target path:** `assets/images/{agent_id}/{article_id}/{filename}`  
+**HTML src attribute:** `src="assets/images/{agent_id}/{article_id}/{filename}"`
 
 ---
 
@@ -383,6 +441,170 @@ function updateTopbar(agent) {
   }
 }
 ```
+
+---
+
+## Special Article Types
+
+These are available on-demand based on what the user asks for. Wire them up during Phase 3 when the user says things like "this article should pull live from a Google Sheet" or "I want a collapsible FAQ". Each is self-contained — add only what's needed for the specific article.
+
+---
+
+### Live Google Sheets sync
+
+**When to use:** User says an article (typically a reference table like a payer list or code list) should stay live and auto-pull from a Google Sheet.
+
+**What you need from the user:**
+- The Google Sheet URL or Sheet ID
+- The GID (tab ID — visible in the URL as `gid=XXXXXXX` when on that tab)
+- The column layout (which column is which — name, status, category, etc.)
+- Whether the sheet is set to "Anyone with the link can view" (required — no API key is used)
+
+**Article HTML — add a container div where the data will render:**
+```html
+<div class="article" data-id="pa-r1" style="display:none"><div class="main-inner">
+  <div class="breadcrumb">...</div>
+  <div class="article-header">
+    <h1 class="article-title">Supported Payers</h1>
+    <p class="article-lede">All payers currently supported for automated prior auth submission.</p>
+    ...
+  </div>
+  <div class="section" style="margin-top:32px;">
+    <h2 class="section-title">Payer List</h2>
+    <div id="pa-r1-live-data">
+      <p style="color:var(--text-muted);font-size:13px;">Loading…</p>
+    </div>
+  </div>
+</div></div>
+```
+
+The `id` on the container (`pa-r1-live-data`) is what the JS will target. Name it `{article_id}-live-data`.
+
+**JS — add inside the existing Google Sheets `<script>` block** (the IIFE that starts with `var SHEET_ID`). The existing block already has `parseCSV`, `statusBadge`, `groupBy`, `syncNote`, and `loadSheet` helpers — reuse them.
+
+Step 1: Add the new GID as a variable at the top of the IIFE:
+```js
+var PA_PAYERS_GID = '123456789'; // replace with actual GID
+```
+
+Step 2: Add the new key to the `loaded` cache object:
+```js
+var loaded = {r4: false, r5: false, 'pa-r1': false};
+```
+
+Step 3: Write a render function for the specific column layout:
+```js
+function renderPriorAuthPayers(rows) {
+  var data = rows.slice(1).filter(function(r) { return r[0]; });
+  // Adjust column indices to match your sheet layout
+  // cols: Payer Name(0), Status(1)
+  var html = syncNote();
+  html += '<table class="status-table"><thead><tr><th>Payer</th><th>Status</th></tr></thead><tbody>';
+  data.forEach(function(r) {
+    html += '<tr><td>' + (r[0]||'') + '</td><td>' + statusBadge(r[1]) + '</td></tr>';
+  });
+  html += '</tbody></table>';
+  return html;
+}
+```
+
+Step 4: Hook into `showArticle` — add a new `if` line in the monkey-patch:
+```js
+window.showArticle = function(id, _noPush) {
+  _origShowArticle(id, _noPush);
+  if (id === 'r4') loadSheet(PAYERS_GID, 'r4-live-data', renderPayers, 'r4');
+  if (id === 'r5') loadSheet(CPT_GID, 'r5-live-data', renderCPT, 'r5');
+  if (id === 'pa-r1') loadSheet(PA_PAYERS_GID, 'pa-r1-live-data', renderPriorAuthPayers, 'pa-r1'); // ← add this
+};
+```
+
+Step 5: Add to the DOMContentLoaded preload block inside the same IIFE:
+```js
+if (id === 'pa-r1') loadSheet(PA_PAYERS_GID, 'pa-r1-live-data', renderPriorAuthPayers, 'pa-r1');
+```
+
+**Status badge values:** The `statusBadge()` helper maps `'live'` → green finalized badge, anything else → grey pending badge. If the sheet uses different status words, update the badge logic or write a custom badge function.
+
+**Important:** Never expose the internal tracking sheet GID `2002806364` — that sheet contains Stedi portal URLs with account IDs. Only wire public-facing sheets.
+
+---
+
+### Callout / info box
+
+**When to use:** User wants a highlighted note, warning, or tip inside an article body.
+
+```html
+<!-- Info / tip -->
+<div class="callout callout-info">
+  <strong>Note:</strong> This step only applies if the payer requires pre-certification.
+</div>
+
+<!-- Warning -->
+<div class="callout callout-warn">
+  <strong>Important:</strong> Do not submit duplicate requests — the payer may flag the account.
+</div>
+```
+
+**CSS to add** (once, in the `<style>` block near other component styles):
+```css
+.callout{padding:12px 16px;border-radius:var(--radius-sm);font-size:13.5px;line-height:1.55;margin:16px 0;}
+.callout-info{background:#EFF6FF;border-left:3px solid var(--brand);color:#1e3a5f;}
+.callout-warn{background:#FFFBEB;border-left:3px solid #F59E0B;color:#78350F;}
+```
+
+---
+
+### Collapsible FAQ / accordion
+
+**When to use:** User wants a list of Q&A pairs where each answer is hidden until clicked.
+
+```html
+<div class="faq-list">
+  <div class="faq-item">
+    <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+      What happens if the payer rejects the request?
+      <svg class="faq-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="faq-a">
+      <p>The system marks the request as Denied and surfaces a reason code. You can resubmit with corrections from the detail view.</p>
+    </div>
+  </div>
+</div>
+```
+
+**CSS to add:**
+```css
+.faq-list{margin:16px 0;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;}
+.faq-item{border-bottom:1px solid var(--border);}
+.faq-item:last-child{border-bottom:none;}
+.faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:none;border:none;font-size:13.5px;font-weight:600;color:var(--text-primary);cursor:pointer;text-align:left;gap:12px;}
+.faq-q:hover{background:var(--surface-soft);}
+.faq-chevron{flex-shrink:0;transition:transform .2s;color:var(--text-muted);}
+.faq-item.open .faq-chevron{transform:rotate(180deg);}
+.faq-a{display:none;padding:0 16px 14px;font-size:13px;color:var(--text-secondary);line-height:1.6;}
+.faq-item.open .faq-a{display:block;}
+```
+
+No JS function needed — the toggle is inline on the button.
+
+---
+
+### Embedded video
+
+**When to use:** User wants to embed a Loom or YouTube walkthrough inside an article.
+
+```html
+<div class="video-wrap" style="margin:20px 0;">
+  <iframe
+    src="https://www.loom.com/embed/YOUR_LOOM_ID"
+    frameborder="0"
+    allowfullscreen
+    style="width:100%;aspect-ratio:16/9;border-radius:var(--radius-sm);">
+  </iframe>
+</div>
+```
+
+No CSS or JS changes needed. Replace `YOUR_LOOM_ID` with the actual ID from the share URL.
 
 ---
 

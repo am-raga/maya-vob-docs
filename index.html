@@ -155,6 +155,18 @@ ul.bullet-list li strong{color:var(--text-primary);}
 .login-error.show{display:block;}
 @keyframes login-shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
 .login-card.shake{animation:login-shake .35s ease;}
+/* AGENT SELECTOR */
+#agent-selector{display:none;max-width:1300px;margin:0 auto;padding:64px 52px;}
+.agent-selector-heading{font-size:28px;font-weight:700;letter-spacing:-.025em;color:var(--text-primary);margin-bottom:8px;}
+.agent-selector-sub{font-size:15px;color:var(--text-secondary);margin-bottom:40px;max-width:480px;}
+.agent-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:680px;}
+.agent-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:28px 24px;cursor:pointer;transition:all .2s;position:relative;text-align:left;}
+.agent-card:hover:not(.locked){border-color:var(--brand);box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.agent-card.locked{cursor:default;opacity:.55;}
+.agent-card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+.agent-card-name{font-size:15px;font-weight:700;color:var(--text-primary);margin-bottom:5px;}
+.agent-card-desc{font-size:13px;color:var(--text-secondary);line-height:1.5;}
+.agent-card-badge{position:absolute;top:14px;right:14px;display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;color:var(--text-muted);letter-spacing:.3px;text-transform:uppercase;}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1P43YPMWQQ"></script>
@@ -191,14 +203,52 @@ ul.bullet-list li strong{color:var(--text-primary);}
     </form>
   </div>
 </div>
+
+<!-- AGENT SELECTOR — shown after login when no deep-link hash is present -->
+<div id="agent-selector">
+  <h1 class="agent-selector-heading">RagaAI Clinical Ops</h1>
+  <p class="agent-selector-sub">Select an agent to view its user manual.</p>
+  <div class="agent-cards">
+
+    <!-- Card 1: Insurance Verification of Benefits (active) -->
+    <div class="agent-card" onclick="selectAgent('vob')">
+      <div class="agent-card-icon" style="background:var(--brand-soft);color:var(--brand);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M20 6H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2z"/></svg>
+      </div>
+      <div class="agent-card-name">Insurance Verification of Benefits</div>
+      <div class="agent-card-desc">Automated eligibility verification, cost estimation, and benefits document generation.</div>
+    </div>
+
+    <!-- Card 2: Prior Authorization (locked — assets and content coming later) -->
+    <div class="agent-card locked">
+      <div class="agent-card-badge">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Coming Soon
+      </div>
+      <div class="agent-card-icon" style="background:var(--surface-soft);color:var(--text-muted);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <div class="agent-card-name">Prior Authorization</div>
+      <div class="agent-card-desc">Automated prior auth submission and status tracking. User manual coming soon.</div>
+    </div>
+
+  </div>
+</div>
+<!-- END AGENT SELECTOR -->
+
 <header class="topbar">
   <div class="topbar-left">
     <img src="assets/logo/maya-vob-logo.png" alt="RagaAI Clinical Ops" class="brand-logo-img" onerror="this.style.display='none'">
     <span class="topbar-title">Verification of Benefits User Manual</span>
   </div>
 </header>
-<div class="layout">
+<div class="layout" id="main-layout">
 <aside class="sidebar">
+
+    <!-- ==========================================
+         VOB AGENT: Insurance Verification of Benefits
+         Sidebar navigation links
+         ========================================== -->
     <div class="sidebar-section">
       <div class="sidebar-section-label tutorial" onclick="toggleSection(this)"><span class="dot"></span> Tutorial <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
       <a class="sidebar-link" data-target="t1" onclick="showArticle('t1');return false;"><span class="article-num">T1</span>Get Started with RagaAI Clinical Ops</a>
@@ -241,8 +291,23 @@ ul.bullet-list li strong{color:var(--text-primary);}
       <a class="sidebar-link" data-target="a2" onclick="showArticle('a2');return false;"><span class="article-num">A2</span>Allergy CPT glossary</a>
       <a class="sidebar-link" data-target="a3" onclick="showArticle('a3');return false;"><span class="article-num">A3</span>Tenant settings</a>
     </div>
+    <!-- ==========================================
+         END VOB AGENT: Sidebar navigation
+         ========================================== -->
+
+    <!-- ==========================================
+         PRIOR AUTH AGENT: Sidebar navigation
+         Sidebar section links will be added here when
+         the Prior Auth agent user manual is ready.
+         ========================================== -->
+
   </aside>
 <main class="main" id="main-content">
+
+<!-- ==========================================
+     VOB AGENT: Insurance Verification of Benefits
+     Article content — t1, h0–h10b, r1–r5, e1–e3, a1–a3
+     ========================================== -->
 <div class="article" data-id="t1" style="display:none"><div class="main-inner">
     
     <div class="breadcrumb">
@@ -291,12 +356,12 @@ ul.bullet-list li strong{color:var(--text-primary);}
     <div class="section" id="s0">
       <h2 class="section-title">Open the home screen</h2>
       <p>Log in to the RagaAI Clinical Ops portal. The home screen displays all available agents at the top.</p>
-      <img src="assets/images/h0/01-home-screen-agents.png" alt="Home screen &mdash; Agents panel visible at top" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <img src="assets/images/vob/h0/01-home-screen-agents.png" alt="Home screen &mdash; Agents panel visible at top" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s1">
       <h2 class="section-title">Navigate to Insurance Verification</h2>
       <p>Hover over <strong>Insurance</strong> in the agents panel and click <strong>Verification</strong>. The Insurance VOB dashboard loads.</p>
-      <img src="assets/images/h0/02-hover-insurance-verification.png" alt="Hover on Insurance &mdash; Verification option highlighted" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <img src="assets/images/vob/h0/02-hover-insurance-verification.png" alt="Hover on Insurance &mdash; Verification option highlighted" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h1');return false;">
           <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
@@ -325,7 +390,7 @@ ul.bullet-list li strong{color:var(--text-primary);}
     <div class="section" id="s0">
       <h2 class="section-title">Dashboard at a glance</h2>
       <p class="section-intro">The dashboard has five regions. The top bar holds product navigation and your profile &mdash; it stays fixed as you scroll.</p>
-      <img src="assets/images/h1/01-dashboard-overview.png" alt="Full dashboard &mdash; annotated with 5 regions" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <img src="assets/images/vob/h1/01-dashboard-overview.png" alt="Full dashboard &mdash; annotated with 5 regions" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
       <div class="annotation-list">
         <div class="annotation-list-title">Five regions</div>
         <div class="annotation-row"><span class="annotation-num">1</span><div><strong>Header filters</strong> &mdash; Doctor and Date Range. Scope everything on the page.</div></div>
@@ -338,27 +403,27 @@ ul.bullet-list li strong{color:var(--text-primary);}
     <div class="section" id="s1">
       <div class="section-num">1</div>
       <h2 class="section-title">Header filters</h2>
-      <p>The <strong>Doctor</strong> and <strong>Date Range</strong> filters scope everything on the page. Date Range filters by <strong>service date</strong> (appointment date, not when the VOB was generated). Click Reset to clear both.</p><img src="assets/images/h1/02-header-filters.png" alt="Doctor and Date Range filter chips" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>The <strong>Doctor</strong> and <strong>Date Range</strong> filters scope everything on the page. Date Range filters by <strong>service date</strong> (appointment date, not when the VOB was generated). Click Reset to clear both.</p><img src="assets/images/vob/h1/02-header-filters.png" alt="Doctor and Date Range filter chips" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s2">
       <div class="section-num">2</div>
       <h2 class="section-title">Summary cards</h2>
-      <p>Three counts reflecting your current filter selection.</p><img src="assets/images/h1/03-summary-cards.png" alt="Three summary cards" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><div class='annotation-list'><div class='annotation-list-title'>What each card counts</div><div class='annotation-row'><span class='annotation-num' style='background:#10B981;'>1</span><div><strong>Total VOBs</strong> &mdash; all patient cases in the system for your current filters.</div></div><div class='annotation-row'><span class='annotation-num' style='background:#A855F7;'>2</span><div><strong>Generated VOBs</strong> &mdash; cases where benefits are verified and the document is ready.</div></div><div class='annotation-row'><span class='annotation-num' style='background:#14B8A6;'>3</span><div><strong>Not Generated VOBs</strong> &mdash; cases the agent couldn&rsquo;t complete. See <a href='#' onclick='showArticle("r3");return false;'>R3</a> for common reasons.</div></div></div><p style='margin-top:14px;'>Click any summary card to filter the patient table to only show cases in that state.</p><img src="assets/images/h1/04-click-card-to-filter.png" alt="Clicking a summary card filters the table" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>Three counts reflecting your current filter selection.</p><img src="assets/images/vob/h1/03-summary-cards.png" alt="Three summary cards" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><div class='annotation-list'><div class='annotation-list-title'>What each card counts</div><div class='annotation-row'><span class='annotation-num' style='background:#10B981;'>1</span><div><strong>Total VOBs</strong> &mdash; all patient cases in the system for your current filters.</div></div><div class='annotation-row'><span class='annotation-num' style='background:#A855F7;'>2</span><div><strong>Generated VOBs</strong> &mdash; cases where benefits are verified and the document is ready.</div></div><div class='annotation-row'><span class='annotation-num' style='background:#14B8A6;'>3</span><div><strong>Not Generated VOBs</strong> &mdash; cases the agent couldn&rsquo;t complete. See <a href='#' onclick='showArticle("r3");return false;'>R3</a> for common reasons.</div></div></div><p style='margin-top:14px;'>Click any summary card to filter the patient table to only show cases in that state.</p><img src="assets/images/vob/h1/04-click-card-to-filter.png" alt="Clicking a summary card filters the table" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s3">
       <div class="section-num">3</div>
       <h2 class="section-title">Operations panel</h2>
-      <p>Two quick-action cards on the right for manual flows &mdash; walk-ins, same-day adds, and urgent cases not covered by the automated run.</p><img src="assets/images/h1/05-operations-panel.png" alt="Operations panel &mdash; Add patient + Upload patients" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><ul class='bullet-list'><li><strong>Add patient (Start Now)</strong> &mdash; single patient entry. See <a href='#' onclick='showArticle("h2a");return false;'>H2a</a>.</li><li><strong>Upload patients (Batch Processing)</strong> &mdash; CSV bulk upload. See <a href='#' onclick='showArticle("h2b");return false;'>H2b</a>.</li></ul>
+      <p>Two quick-action cards on the right for manual flows &mdash; walk-ins, same-day adds, and urgent cases not covered by the automated run.</p><img src="assets/images/vob/h1/05-operations-panel.png" alt="Operations panel &mdash; Add patient + Upload patients" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><ul class='bullet-list'><li><strong>Add patient (Start Now)</strong> &mdash; single patient entry. See <a href='#' onclick='showArticle("h2a");return false;'>H2a</a>.</li><li><strong>Upload patients (Batch Processing)</strong> &mdash; CSV bulk upload. See <a href='#' onclick='showArticle("h2b");return false;'>H2b</a>.</li></ul>
     </div>
     <div class="section" id="s4">
       <div class="section-num">4</div>
       <h2 class="section-title">Status filters</h2>
-      <p>Click a chip to narrow the patient table to that state. Click again to clear. Full definitions in <a href='#' onclick='showArticle("r1");return false;'>R1: Status states</a>.</p><img src="assets/images/h1/06-status-filters.png" alt="Status filter chip row" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><table class='status-table'><thead><tr><th>Status</th><th>What it means</th></tr></thead><tbody><tr><td><span class='badge draft'><span class='badge-dot'></span>In Draft</span></td><td>Benefits verified, awaiting your review and confirmation. Editable.</td></tr><tr><td><span class='badge finalized'><span class='badge-dot'></span>Cost Finalized</span></td><td>Cost estimate confirmed and locked. Requires a Re-VOB to change.</td></tr><tr><td><span class='badge pending'><span class='badge-dot'></span>Pending Action</span></td><td>Flagged for staff input &mdash; typically a missing or ambiguous data point.</td></tr><tr><td><span class='badge inactive'><span class='badge-dot'></span>Inactive / Not Verified</span></td><td>Insurance inactive or could not be verified.</td></tr></tbody></table>
+      <p>Click a chip to narrow the patient table to that state. Click again to clear. Full definitions in <a href='#' onclick='showArticle("r1");return false;'>R1: Status states</a>.</p><img src="assets/images/vob/h1/06-status-filters.png" alt="Status filter chip row" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><table class='status-table'><thead><tr><th>Status</th><th>What it means</th></tr></thead><tbody><tr><td><span class='badge draft'><span class='badge-dot'></span>In Draft</span></td><td>Benefits verified, awaiting your review and confirmation. Editable.</td></tr><tr><td><span class='badge finalized'><span class='badge-dot'></span>Cost Finalized</span></td><td>Cost estimate confirmed and locked. Requires a Re-VOB to change.</td></tr><tr><td><span class='badge pending'><span class='badge-dot'></span>Pending Action</span></td><td>Flagged for staff input &mdash; typically a missing or ambiguous data point.</td></tr><tr><td><span class='badge inactive'><span class='badge-dot'></span>Inactive / Not Verified</span></td><td>Insurance inactive or could not be verified.</td></tr></tbody></table>
     </div>
     <div class="section" id="s5">
       <div class="section-num">5</div>
       <h2 class="section-title">Patient table</h2>
-      <p>The working list. Click any row to open the patient&rsquo;s cost details page.</p><img src="assets/images/h1/07-patient-table.png" alt="Patient table with toolbar" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><h3 class='subsection-title'>Toolbar</h3><ul class='bullet-list'><li><strong>Search Patient</strong> &mdash; search by name within the current filtered list.</li><li><strong>Service Date sort</strong> &mdash; toggle ascending/descending by appointment date.</li><li><strong>Filter</strong> &mdash; filter by insurance carrier.</li><li><strong>Show PII</strong> &mdash; toggle to mask patient names for screen sharing.</li></ul><img src="assets/images/h1/08-search-patient.png" alt="Search patient field in the table toolbar" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><img src="assets/images/h1/09-advanced-filters.png" alt="Advanced filters &mdash; filter by insurance carrier" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><h3 class='subsection-title'>Columns</h3><ul class='bullet-list'><li><strong>Patient Name</strong> &mdash; last, first. Avatar shows initials.</li><li><strong>Service Date</strong> &mdash; patient&rsquo;s upcoming or past appointment date.</li><li><strong>Benefits Verified On</strong> &mdash; when the VOB was last generated. <code>&mdash;</code> if not yet run.</li><li><strong>Provider</strong> &mdash; treating provider for this visit.</li><li><strong>Insurance Provider</strong> &mdash; payer as captured from the EHR.</li><li><strong>Status</strong> &mdash; current state badge. See Section 4 above.</li></ul>
+      <p>The working list. Click any row to open the patient&rsquo;s cost details page.</p><img src="assets/images/vob/h1/07-patient-table.png" alt="Patient table with toolbar" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><h3 class='subsection-title'>Toolbar</h3><ul class='bullet-list'><li><strong>Search Patient</strong> &mdash; search by name within the current filtered list.</li><li><strong>Service Date sort</strong> &mdash; toggle ascending/descending by appointment date.</li><li><strong>Filter</strong> &mdash; filter by insurance carrier.</li><li><strong>Show PII</strong> &mdash; toggle to mask patient names for screen sharing.</li></ul><img src="assets/images/vob/h1/08-search-patient.png" alt="Search patient field in the table toolbar" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><img src="assets/images/vob/h1/09-advanced-filters.png" alt="Advanced filters &mdash; filter by insurance carrier" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><h3 class='subsection-title'>Columns</h3><ul class='bullet-list'><li><strong>Patient Name</strong> &mdash; last, first. Avatar shows initials.</li><li><strong>Service Date</strong> &mdash; patient&rsquo;s upcoming or past appointment date.</li><li><strong>Benefits Verified On</strong> &mdash; when the VOB was last generated. <code>&mdash;</code> if not yet run.</li><li><strong>Provider</strong> &mdash; treating provider for this visit.</li><li><strong>Insurance Provider</strong> &mdash; payer as captured from the EHR.</li><li><strong>Status</strong> &mdash; current state badge. See Section 4 above.</li></ul>
     </div>
     <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h2a');return false;">
           <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
@@ -393,22 +458,22 @@ ul.bullet-list li strong{color:var(--text-primary);}
     <div class="section" id="s1">
       <div class="section-num">1</div>
       <h2 class="section-title">Click Add patient</h2>
-      <img src="assets/images/h2a/01-add-patient-cta.png" alt="Operations panel &mdash; Add patient CTA" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><p>From the dashboard, click <strong>Add patient</strong> in the Operations panel (top right). The Add Patient modal opens.</p>
+      <img src="assets/images/vob/h2a/01-add-patient-cta.png" alt="Operations panel &mdash; Add patient CTA" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><p>From the dashboard, click <strong>Add patient</strong> in the Operations panel (top right). The Add Patient modal opens.</p>
     </div>
     <div class="section" id="s2">
       <div class="section-num">2</div>
       <h2 class="section-title">Fill in required fields</h2>
-      <img src="assets/images/h2a/02-add-patient-modal.png" alt="Add Patient modal &mdash; required fields" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><p>All fields marked with an asterisk are required:</p><table class='status-table'><thead><tr><th>Field</th><th>Notes</th></tr></thead><tbody><tr><td><strong>First name &amp; Last name</strong></td><td>As shown on insurance card.</td></tr><tr><td><strong>Date of Birth</strong></td><td>Format: MMDDYYYY</td></tr><tr><td><strong>Insurance Provider</strong></td><td>Dropdown-driven. Select from list to ensure correct payer routing.</td></tr><tr><td><strong>Policy Number</strong></td><td>Member ID from insurance card.</td></tr><tr><td><strong>Service Date</strong></td><td>Format: MMDDYYYY &mdash; the appointment date.</td></tr></tbody></table><img src="assets/images/h2a/03-insurance-provider-dropdown.png" alt="Insurance Provider dropdown selection" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <img src="assets/images/vob/h2a/02-add-patient-modal.png" alt="Add Patient modal &mdash; required fields" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><p>All fields marked with an asterisk are required:</p><table class='status-table'><thead><tr><th>Field</th><th>Notes</th></tr></thead><tbody><tr><td><strong>First name &amp; Last name</strong></td><td>As shown on insurance card.</td></tr><tr><td><strong>Date of Birth</strong></td><td>Format: MMDDYYYY</td></tr><tr><td><strong>Insurance Provider</strong></td><td>Dropdown-driven. Select from list to ensure correct payer routing.</td></tr><tr><td><strong>Policy Number</strong></td><td>Member ID from insurance card.</td></tr><tr><td><strong>Service Date</strong></td><td>Format: MMDDYYYY &mdash; the appointment date.</td></tr></tbody></table><img src="assets/images/vob/h2a/03-insurance-provider-dropdown.png" alt="Insurance Provider dropdown selection" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s3">
       <div class="section-num">3</div>
       <h2 class="section-title">Optional fields</h2>
-      <p>These can be left blank and filled in later if needed:</p><ul class='bullet-list'><li><strong>Provider name</strong> &mdash; treating provider for this visit.</li><li><strong>Phone number</strong></li><li><strong>Email ID</strong></li></ul><img src="assets/images/h2a/04-optional-fields.png" alt="Add Patient modal &mdash; optional fields panel" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>These can be left blank and filled in later if needed:</p><ul class='bullet-list'><li><strong>Provider name</strong> &mdash; treating provider for this visit.</li><li><strong>Phone number</strong></li><li><strong>Email ID</strong></li></ul><img src="assets/images/vob/h2a/04-optional-fields.png" alt="Add Patient modal &mdash; optional fields panel" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s4">
       <div class="section-num">4</div>
       <h2 class="section-title">Submit and wait</h2>
-      <p>Click <strong>Add Patient &amp; Start Benefits Inquiry</strong>. The modal closes and the patient appears at the top of the dashboard with an <strong>In Creation</strong> status and a 2-minute countdown timer.</p><img src="assets/images/h2a/05-add-and-start-benefits-inquriy.png" alt="Add Patient &amp; Start Benefits Inquiry button" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><img src="assets/images/h2a/06-search-patient.png" alt="Searching for the newly added patient on the dashboard" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><img src="assets/images/h2a/07-in-creation-timer.png" alt="Patient in creation state with timer" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><div class="callout info"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div class="callout-body"><div class="callout-title">What happens next</div>The benefits document completes in <strong>less than 20 seconds</strong>. The cost calculator takes approximately <strong>1 minute to unlock</strong> after the document is ready. The page auto-refreshes and updates status automatically.</div></div>
+      <p>Click <strong>Add Patient &amp; Start Benefits Inquiry</strong>. The modal closes and the patient appears at the top of the dashboard with an <strong>In Creation</strong> status and a 2-minute countdown timer.</p><img src="assets/images/vob/h2a/05-add-and-start-benefits-inquriy.png" alt="Add Patient &amp; Start Benefits Inquiry button" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><img src="assets/images/vob/h2a/06-search-patient.png" alt="Searching for the newly added patient on the dashboard" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><img src="assets/images/vob/h2a/07-in-creation-timer.png" alt="Patient in creation state with timer" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><div class="callout info"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div class="callout-body"><div class="callout-title">What happens next</div>The benefits document completes in <strong>less than 20 seconds</strong>. The cost calculator takes approximately <strong>1 minute to unlock</strong> after the document is ready. The page auto-refreshes and updates status automatically.</div></div>
     </div>
     <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h2b');return false;">
           <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
@@ -441,15 +506,15 @@ ul.bullet-list li strong{color:var(--text-primary);}
       <div class="section-num">1</div>
       <h2 class="section-title">Click Upload patients</h2>
       <p>From the dashboard, click the <strong>Upload patients</strong> card in the Operations panel on the right side.</p>
-      <img src="assets/images/h2b/01-select-upload-patients.png" alt="Upload patients card in the Operations panel" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <img src="assets/images/vob/h2b/01-select-upload-patients.png" alt="Upload patients card in the Operations panel" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s2">
       <div class="section-num">2</div>
       <h2 class="section-title">Upload your CSV file</h2>
       <p>The <strong>Upload Patients</strong> modal opens. Drag and drop your CSV onto the upload area, or click it to browse your files.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0;">
-        <img src="assets/images/h2b/02-upload-file-of-your-choice.png" alt="Upload modal with drag-and-drop area" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;">
-        <img src="assets/images/h2b/03-proceed-to-map-columns.png" alt="File uploaded with green checkmark" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;">
+        <img src="assets/images/vob/h2b/02-upload-file-of-your-choice.png" alt="Upload modal with drag-and-drop area" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;">
+        <img src="assets/images/vob/h2b/03-proceed-to-map-columns.png" alt="File uploaded with green checkmark" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;">
       </div>
       <p>Once the file uploads successfully a green checkmark appears with the filename. Click <strong>Add &amp; Start Benefits Inquiry</strong> to proceed.</p>
     </div>
@@ -457,16 +522,16 @@ ul.bullet-list li strong{color:var(--text-primary);}
       <div class="section-num">3</div>
       <h2 class="section-title">Map CSV columns</h2>
       <p>The <strong>Map CSV Columns</strong> screen shows. The system automatically maps your file&rsquo;s column headers to the required fields where it can. Review the mapping before importing.</p>
-      <img src="assets/images/h2b/04-automapping-enabled-based-on-file-columns.png" alt="Map CSV Columns screen with auto-mapped mandatory fields" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <img src="assets/images/vob/h2b/04-automapping-enabled-based-on-file-columns.png" alt="Map CSV Columns screen with auto-mapped mandatory fields" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
       <p>Mandatory fields are: <strong>Patient Name, DOB, Appt. Provider, Service Date,</strong> and <strong>Insurance</strong>. If any field shows the wrong column or &ldquo;Select column&rdquo;, click its dropdown and pick the correct header from your file.</p>
-      <img src="assets/images/h2b/05-select-correct-coulmn-in-case-of-edits.png" alt="Dropdown open to manually select the correct column mapping" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <img src="assets/images/vob/h2b/05-select-correct-coulmn-in-case-of-edits.png" alt="Dropdown open to manually select the correct column mapping" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
       <p>Check <strong>Save column mapping preferences for future uploads</strong> to skip this step next time you upload a file with the same format.</p>
     </div>
     <div class="section" id="s4">
       <div class="section-num">4</div>
       <h2 class="section-title">Import</h2>
       <p>Once all mandatory fields are mapped, click <strong>Import</strong>. The system queues a benefits inquiry for every patient row in the file.</p>
-      <img src="assets/images/h2b/06-import-uploaded-file.png" alt="Import button active after all mandatory fields are mapped" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <img src="assets/images/vob/h2b/06-import-uploaded-file.png" alt="Import button active after all mandatory fields are mapped" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h2a');return false;">
           <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
@@ -494,22 +559,22 @@ ul.bullet-list li strong{color:var(--text-primary);}
     <div class="section" id="s1">
       <div class="section-num">1</div>
       <h2 class="section-title">Click a patient row</h2>
-      <p>From the dashboard, click anywhere on a patient row to open their profile.</p><img src="assets/images/h3/01-patient-row-click.png" alt="Patient row click &mdash; highlight on hover" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>From the dashboard, click anywhere on a patient row to open their profile.</p><img src="assets/images/vob/h3/01-patient-row-click.png" alt="Patient row click &mdash; highlight on hover" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s2">
       <div class="section-num">2</div>
       <h2 class="section-title">Open the Benefits Document</h2>
-      <p>The <strong>Verification Hub</strong> loads. Click <strong>Open Document</strong> under the Benefits Document card.</p><img src="assets/images/h3/02-verification-hub.png" alt="Verification Hub &mdash; Benefits Document and Cost Calculator options" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>The <strong>Verification Hub</strong> loads. Click <strong>Open Document</strong> under the Benefits Document card.</p><img src="assets/images/vob/h3/02-verification-hub.png" alt="Verification Hub &mdash; Benefits Document and Cost Calculator options" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s3">
       <div class="section-num">3</div>
       <h2 class="section-title">Review the document</h2>
-      <p>The benefits document is a scrollable payer summary. It includes:</p><ul class='bullet-list'><li>Plan Information (carrier, plan type, in-network status, member ID, effective dates)</li><li>Deductible and Out-of-Pocket amounts (individual and family)</li><li>Authorizations (Prior Auth, Referral, Pre-existing limitations)</li><li>Service Benefits by CPT group (Allergy Testing, Immunotherapy, Rapid Desensitization, Respiratory)</li><li>Comments from payer response</li></ul><img src="assets/images/h3/03-vob-document.png" alt="Scrollable VOB document with disclaimers" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><img src="assets/images/h3/04-benefits-section.png" alt="Benefits section &mdash; service coverage by CPT group" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><p>Verify the details match your expectations. If something looks wrong, see <a href='#' onclick='showArticle("h5");return false;'>H5: Handle a low-confidence VOB</a> or <a href='#' onclick='showArticle("h6");return false;'>H6: Edit a VOB</a>.</p>
+      <p>The benefits document is a scrollable payer summary. It includes:</p><ul class='bullet-list'><li>Plan Information (carrier, plan type, in-network status, member ID, effective dates)</li><li>Deductible and Out-of-Pocket amounts (individual and family)</li><li>Authorizations (Prior Auth, Referral, Pre-existing limitations)</li><li>Service Benefits by CPT group (Allergy Testing, Immunotherapy, Rapid Desensitization, Respiratory)</li><li>Comments from payer response</li></ul><img src="assets/images/vob/h3/03-vob-document.png" alt="Scrollable VOB document with disclaimers" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><img src="assets/images/vob/h3/04-benefits-section.png" alt="Benefits section &mdash; service coverage by CPT group" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><p>Verify the details match your expectations. If something looks wrong, see <a href='#' onclick='showArticle("h5");return false;'>H5: Handle a low-confidence VOB</a> or <a href='#' onclick='showArticle("h6");return false;'>H6: Edit a VOB</a>.</p>
     </div>
     <div class="section" id="s4">
       <div class="section-num">4</div>
       <h2 class="section-title">Download or print</h2>
-      <p>Click <strong>Download</strong> in the top toolbar. Your browser downloads the document as a PDF. Open it locally to print.</p><img src="assets/images/h3/06-download-print.png" alt="Download button in document toolbar" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>Click <strong>Download</strong> in the top toolbar. Your browser downloads the document as a PDF. Open it locally to print.</p><img src="assets/images/vob/h3/06-download-print.png" alt="Download button in document toolbar" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h5');return false;">
           <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
@@ -550,8 +615,8 @@ ul.bullet-list li strong{color:var(--text-primary);}
       <h2 class="section-title">Click Retry VOB</h2>
       <p>Open the patient record, then click <strong>Retry VOB</strong> in the top action bar. The <strong>Retry &amp; Reset VOB</strong> modal opens showing the patient&rsquo;s current identity and remaining attempts.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0;">
-        <img src="assets/images/h4/01-retry-vob%20button.png" alt="Retry VOB button in the top action bar" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;">
-        <img src="assets/images/h4/02-edit-details-to-retry.png" alt="Retry and Reset VOB modal" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;">
+        <img src="assets/images/vob/h4/01-retry-vob%20button.png" alt="Retry VOB button in the top action bar" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;">
+        <img src="assets/images/vob/h4/02-edit-details-to-retry.png" alt="Retry and Reset VOB modal" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;">
       </div>
     </div>
     <div class="section" id="s2">
@@ -559,8 +624,8 @@ ul.bullet-list li strong{color:var(--text-primary);}
       <h2 class="section-title">(Optional) Edit patient details</h2>
       <p>If patient info needs correcting, click <strong>Edit Details</strong> — update name, DOB, carrier, or member ID — then click <strong>Done Editing</strong> to collapse the panel.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0;">
-        <img src="assets/images/h4/03-edit-details-as-required.png" alt="Patient fields expanded for editing" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;">
-        <img src="assets/images/h4/04-select-done-editing.png" alt="Done Editing button" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;">
+        <img src="assets/images/vob/h4/03-edit-details-as-required.png" alt="Patient fields expanded for editing" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;">
+        <img src="assets/images/vob/h4/04-select-done-editing.png" alt="Done Editing button" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;">
       </div>
     </div>
     <div class="section" id="s3">
@@ -568,8 +633,8 @@ ul.bullet-list li strong{color:var(--text-primary);}
       <h2 class="section-title">Select NPI, enter reason, and retry</h2>
       <p>Pick a <strong>Billing NPI</strong> from the dropdown <span style="color:#EF4444;font-weight:600;">(required)</span>, fill in the <strong>Retry Reason</strong>, then click <strong>Retry &amp; Reset</strong>. The patient status returns to <strong>In Draft</strong> once complete.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0;">
-        <img src="assets/images/h4/05-select-npi.png" alt="Billing NPI dropdown — mandatory" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;">
-        <img src="assets/images/h4/06-retry-and-reset.png" alt="Retry reason filled, Retry and Reset button active" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;">
+        <img src="assets/images/vob/h4/05-select-npi.png" alt="Billing NPI dropdown — mandatory" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;">
+        <img src="assets/images/vob/h4/06-retry-and-reset.png" alt="Retry reason filled, Retry and Reset button active" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;">
       </div>
       <div class="callout warning"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div class="callout-body"><div class="callout-title">Retry limit</div>Each service date allows a maximum of <strong>3 retries</strong>. Once reached, no further retries are possible for that appointment.</div></div>
     </div>
@@ -602,17 +667,17 @@ ul.bullet-list li strong{color:var(--text-primary);}
     <div class="section" id="s1">
       <div class="section-num">1</div>
       <h2 class="section-title">Identify confidence from the dashboard</h2>
-      <p>Confidence is shown by the <strong>coloured circle</strong> to the right of the patient name in the table.</p><img src="assets/images/h5/01-confidence-circles.png" alt="Patient table &mdash; confidence circles visible next to patient names" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><table class='status-table'><thead><tr><th>Colour</th><th>Meaning</th></tr></thead><tbody><tr><td><span style='display:inline-block;width:12px;height:12px;border-radius:50%;background:#10B981;margin-right:6px;'></span><strong>Green</strong></td><td>High confidence &mdash; benefits fully verified.</td></tr><tr><td><span style='display:inline-block;width:12px;height:12px;border-radius:50%;background:#EF4444;margin-right:6px;'></span><strong>Red</strong></td><td>Low confidence, inactive insurance, or invalid patient details.</td></tr><tr><td><span style='display:inline-block;width:12px;height:12px;border-radius:50%;background:#94A3B8;margin-right:6px;'></span><strong>Grey</strong></td><td>Unsupported payer &mdash; the system couldn&rsquo;t query this carrier.</td></tr></tbody></table>
+      <p>Confidence is shown by the <strong>coloured circle</strong> to the right of the patient name in the table.</p><img src="assets/images/vob/h5/01-confidence-circles.png" alt="Patient table &mdash; confidence circles visible next to patient names" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><table class='status-table'><thead><tr><th>Colour</th><th>Meaning</th></tr></thead><tbody><tr><td><span style='display:inline-block;width:12px;height:12px;border-radius:50%;background:#10B981;margin-right:6px;'></span><strong>Green</strong></td><td>High confidence &mdash; benefits fully verified.</td></tr><tr><td><span style='display:inline-block;width:12px;height:12px;border-radius:50%;background:#EF4444;margin-right:6px;'></span><strong>Red</strong></td><td>Low confidence, inactive insurance, or invalid patient details.</td></tr><tr><td><span style='display:inline-block;width:12px;height:12px;border-radius:50%;background:#94A3B8;margin-right:6px;'></span><strong>Grey</strong></td><td>Unsupported payer &mdash; the system couldn&rsquo;t query this carrier.</td></tr></tbody></table>
     </div>
     <div class="section" id="s2">
       <div class="section-num">2</div>
       <h2 class="section-title">Open the record</h2>
-      <p>Click the patient row. The header banner shows the confidence score and turns <span style='color:#EF4444;font-weight:600;'>red</span> for low confidence or <span style='color:#10B981;font-weight:600;'>green</span> for high confidence.</p><img src="assets/images/h5/02-low-confidence-header.png" alt="Patient profile header &mdash; red banner for low confidence with score" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>Click the patient row. The header banner shows the confidence score and turns <span style='color:#EF4444;font-weight:600;'>red</span> for low confidence or <span style='color:#10B981;font-weight:600;'>green</span> for high confidence.</p><img src="assets/images/vob/h5/02-low-confidence-header.png" alt="Patient profile header &mdash; red banner for low confidence with score" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s3">
       <div class="section-num">3</div>
       <h2 class="section-title">Read the VOB document</h2>
-      <p>Open the Benefits Document. A <strong>&ldquo;Low confidence Benefits&rdquo;</strong> flag appears at the top. Scroll to the <strong>Comments</strong> section to find the specific failure reason.</p><img src="assets/images/h5/03-low-confidence-doc.png" alt="VOB document &mdash; low confidence flag and comments section" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>Open the Benefits Document. A <strong>&ldquo;Low confidence Benefits&rdquo;</strong> flag appears at the top. Scroll to the <strong>Comments</strong> section to find the specific failure reason.</p><img src="assets/images/vob/h5/03-low-confidence-doc.png" alt="VOB document &mdash; low confidence flag and comments section" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section">
       <h2 class="section-title">What to do next</h2>
@@ -651,17 +716,17 @@ ul.bullet-list li strong{color:var(--text-primary);}
     <div class="section" id="s1">
       <div class="section-num">1</div>
       <h2 class="section-title">Open the Benefits Document</h2>
-      <p>From the patient&rsquo;s Verification Hub, click <strong>Open Document</strong>. The document opens in editable mode &mdash; all fields can be edited directly.</p><img src="assets/images/h6/01-editable-vob.png" alt="VOB document in editable state &mdash; fields highlighted" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>From the patient&rsquo;s Verification Hub, click <strong>Open Document</strong>. The document opens in editable mode &mdash; all fields can be edited directly.</p><img src="assets/images/vob/h6/01-editable-vob.png" alt="VOB document in editable state &mdash; fields highlighted" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s2">
       <div class="section-num">2</div>
       <h2 class="section-title">Edit fields as needed</h2>
-      <p>Click any field to edit it. Common corrections include deductible amounts, OOP balances, copay values, and coinsurance percentages. Cross-reference against a payer portal or call notes.</p><img src="assets/images/h6/02-editing-field.png" alt="Editing a field in the VOB document &mdash; in-line text input" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>Click any field to edit it. Common corrections include deductible amounts, OOP balances, copay values, and coinsurance percentages. Cross-reference against a payer portal or call notes.</p><img src="assets/images/vob/h6/02-editing-field.png" alt="Editing a field in the VOB document &mdash; in-line text input" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s3">
       <div class="section-num">3</div>
       <h2 class="section-title">Save and Confirm</h2>
-      <p>Click <strong>Save &amp; Confirm</strong> in the top action bar. The document moves to a <strong>Finalizing&hellip;</strong> state while the system verifies the information.</p><img src="assets/images/h6/03-save-confirm-finalizing.png" alt="Save and Confirm button &mdash; Finalizing state visible" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><div class="callout info"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div class="callout-body"><div class="callout-title">What happens next</div>The Cost Calculator unlocks after approximately 60 seconds once verification is complete.</div></div><div class="callout warning"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div class="callout-body">If the entered information can&rsquo;t be reconciled with the expected payer response structure, the Cost Calculator will remain locked. Review any fields that may contain placeholder or inconsistent values, correct them, and save again.</div></div>
+      <p>Click <strong>Save &amp; Confirm</strong> in the top action bar. The document moves to a <strong>Finalizing&hellip;</strong> state while the system verifies the information.</p><img src="assets/images/vob/h6/03-save-confirm-finalizing.png" alt="Save and Confirm button &mdash; Finalizing state visible" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><div class="callout info"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div class="callout-body"><div class="callout-title">What happens next</div>The Cost Calculator unlocks after approximately 60 seconds once verification is complete.</div></div><div class="callout warning"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div class="callout-body">If the entered information can&rsquo;t be reconciled with the expected payer response structure, the Cost Calculator will remain locked. Review any fields that may contain placeholder or inconsistent values, correct them, and save again.</div></div>
     </div>
     <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h4');return false;">
           <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
@@ -692,27 +757,27 @@ ul.bullet-list li strong{color:var(--text-primary);}
     <div class="section" id="s1">
       <div class="section-num">1</div>
       <h2 class="section-title">Open the Cost Calculator</h2>
-      <p>From the Verification Hub, click <strong>Open Calculator</strong> under the Cost Calculator card.</p><img src="assets/images/h7/01-open-calculator.png" alt="Verification Hub &mdash; Cost Calculator card with Open Calculator link" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>From the Verification Hub, click <strong>Open Calculator</strong> under the Cost Calculator card.</p><img src="assets/images/vob/h7/01-open-calculator.png" alt="Verification Hub &mdash; Cost Calculator card with Open Calculator link" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s2">
       <div class="section-num">2</div>
       <h2 class="section-title">Switch to Doctor View</h2>
-      <p>The calculator opens on the <strong>Doctor View</strong> tab by default (read-only summary). Use the tabs at the top to switch between Doctor View and Staff Edit.</p><img src="assets/images/h7/02-doctor-view-tabs.png" alt="Cost calculator &mdash; Doctor View tab active, Staff Edit tab visible" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><table class='status-table'><thead><tr><th>Column</th><th>What it shows</th></tr></thead><tbody><tr><td>CPT Code</td><td>Procedure code</td></tr><tr><td>Description</td><td>Treatment name and quantity info</td></tr><tr><td>Allowed Amount/Unit</td><td>Contracted rate per unit</td></tr><tr><td>Qty (Units)</td><td>Number of units</td></tr><tr><td>Patient Owes (After Insurance)</td><td>Calculated patient responsibility</td></tr><tr><td>Action</td><td>Delete treatment</td></tr></tbody></table><p>The <strong>side panel</strong> shows plan details organized into three groups:</p><ul class='bullet-list'><li><strong>Insurance details</strong> &mdash; Carrier, Plan Name, Coinsurance, Specialist Copay, Prior Auth and Referral requirements.</li><li><strong>Deductible &amp; OOP</strong> &mdash; Individual and Family remaining amounts for both deductible and out-of-pocket maximum.</li><li><strong>Disclaimers</strong> &mdash; payer-specific notes and processing caveats.</li></ul><img src="assets/images/h7/06-leftpane-insurance-details.png" alt="Side panel &mdash; Insurance details (Carrier, Plan, Coinsurance, Copay)" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><img src="assets/images/h7/07-leftpane-deductible-oop.png" alt="Side panel &mdash; Deductible and Out-of-Pocket remaining (Individual / Family)" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><img src="assets/images/h7/08-leftpane-disclaimers.png" alt="Side panel &mdash; Disclaimers and payer notes" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>The calculator opens on the <strong>Doctor View</strong> tab by default (read-only summary). Use the tabs at the top to switch between Doctor View and Staff Edit.</p><img src="assets/images/vob/h7/02-doctor-view-tabs.png" alt="Cost calculator &mdash; Doctor View tab active, Staff Edit tab visible" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><table class='status-table'><thead><tr><th>Column</th><th>What it shows</th></tr></thead><tbody><tr><td>CPT Code</td><td>Procedure code</td></tr><tr><td>Description</td><td>Treatment name and quantity info</td></tr><tr><td>Allowed Amount/Unit</td><td>Contracted rate per unit</td></tr><tr><td>Qty (Units)</td><td>Number of units</td></tr><tr><td>Patient Owes (After Insurance)</td><td>Calculated patient responsibility</td></tr><tr><td>Action</td><td>Delete treatment</td></tr></tbody></table><p>The <strong>side panel</strong> shows plan details organized into three groups:</p><ul class='bullet-list'><li><strong>Insurance details</strong> &mdash; Carrier, Plan Name, Coinsurance, Specialist Copay, Prior Auth and Referral requirements.</li><li><strong>Deductible &amp; OOP</strong> &mdash; Individual and Family remaining amounts for both deductible and out-of-pocket maximum.</li><li><strong>Disclaimers</strong> &mdash; payer-specific notes and processing caveats.</li></ul><img src="assets/images/vob/h7/06-leftpane-insurance-details.png" alt="Side panel &mdash; Insurance details (Carrier, Plan, Coinsurance, Copay)" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><img src="assets/images/vob/h7/07-leftpane-deductible-oop.png" alt="Side panel &mdash; Deductible and Out-of-Pocket remaining (Individual / Family)" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><img src="assets/images/vob/h7/08-leftpane-disclaimers.png" alt="Side panel &mdash; Disclaimers and payer notes" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s3">
       <div class="section-num">3</div>
       <h2 class="section-title">Add a treatment</h2>
-      <p>Click the search bar and type a treatment name or CPT code. Select from the dropdown to add it to the table.</p><img src="assets/images/h7/03-search-treatment.png" alt="Search treatments dropdown &mdash; typing CPT code or name" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>Click the search bar and type a treatment name or CPT code. Select from the dropdown to add it to the table.</p><img src="assets/images/vob/h7/03-search-treatment.png" alt="Search treatments dropdown &mdash; typing CPT code or name" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s4">
       <div class="section-num">4</div>
       <h2 class="section-title">Adjust quantity</h2>
-      <p>Click the <strong>+</strong> or <strong>&minus;</strong> buttons, or type directly in the quantity field. Costs update in real time.</p><img src="assets/images/h7/04-adjust-quantity.png" alt="Quantity adjustment &mdash; + and - controls with real-time cost update" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>Click the <strong>+</strong> or <strong>&minus;</strong> buttons, or type directly in the quantity field. Costs update in real time.</p><img src="assets/images/vob/h7/04-adjust-quantity.png" alt="Quantity adjustment &mdash; + and - controls with real-time cost update" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s5">
       <div class="section-num">5</div>
       <h2 class="section-title">Review the grand total</h2>
-      <p>Scroll down to see the <strong>Estimated Grand Total</strong>. If CPT 95180 is in the list, build type comparison cards (Rush / Cluster / Conventional) appear here automatically. See <a href='#' onclick='showArticle("h9");return false;'>H9: Select build types</a>.</p><img src="assets/images/h7/05-grand-total.png" alt="Estimated grand total &mdash; tentative cost after insurance with build type cards if 95180 added" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><p>To delete a treatment, click the <strong>dustbin icon</strong> on its row.</p>
+      <p>Scroll down to see the <strong>Estimated Grand Total</strong>. If CPT 95180 is in the list, build type comparison cards (Rush / Cluster / Conventional) appear here automatically. See <a href='#' onclick='showArticle("h9");return false;'>H9: Select build types</a>.</p><img src="assets/images/vob/h7/05-grand-total.png" alt="Estimated grand total &mdash; tentative cost after insurance with build type cards if 95180 added" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><p>To delete a treatment, click the <strong>dustbin icon</strong> on its row.</p>
     </div>
     <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h8');return false;">
           <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
@@ -743,22 +808,22 @@ ul.bullet-list li strong{color:var(--text-primary);}
     <div class="section" id="s1">
       <div class="section-num">1</div>
       <h2 class="section-title">Switch to Staff Edit</h2>
-      <p>From the Cost Calculator, click the <strong>Staff Edit</strong> tab at the top. The table expands with additional editable columns.</p><img src="assets/images/h8/01-staff-edit-tab.png" alt="Staff Edit tab &mdash; expanded columns visible" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><table class='status-table'><thead><tr><th>Column</th><th>What it shows</th></tr></thead><tbody><tr><td>CPT Code</td><td>Procedure code</td></tr><tr><td>Description</td><td>Treatment name, quantity, build type badge</td></tr><tr><td>Allowed/Unit</td><td>Contracted rate &mdash; editable</td></tr><tr><td>Qty</td><td>Units &mdash; editable</td></tr><tr><td>Subtotal</td><td>Allowed &times; Qty</td></tr><tr><td>Coins</td><td>Coinsurance % &mdash; editable</td></tr><tr><td>Copay</td><td>Copay amount &mdash; editable</td></tr><tr><td>Deductible</td><td>Deductible applied to this line</td></tr><tr><td>PT Owes</td><td>Calculated patient responsibility</td></tr><tr><td>Include</td><td>Toggle to include/exclude from grand total</td></tr></tbody></table>
+      <p>From the Cost Calculator, click the <strong>Staff Edit</strong> tab at the top. The table expands with additional editable columns.</p><img src="assets/images/vob/h8/01-staff-edit-tab.png" alt="Staff Edit tab &mdash; expanded columns visible" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><table class='status-table'><thead><tr><th>Column</th><th>What it shows</th></tr></thead><tbody><tr><td>CPT Code</td><td>Procedure code</td></tr><tr><td>Description</td><td>Treatment name, quantity, build type badge</td></tr><tr><td>Allowed/Unit</td><td>Contracted rate &mdash; editable</td></tr><tr><td>Qty</td><td>Units &mdash; editable</td></tr><tr><td>Subtotal</td><td>Allowed &times; Qty</td></tr><tr><td>Coins</td><td>Coinsurance % &mdash; editable</td></tr><tr><td>Copay</td><td>Copay amount &mdash; editable</td></tr><tr><td>Deductible</td><td>Deductible applied to this line</td></tr><tr><td>PT Owes</td><td>Calculated patient responsibility</td></tr><tr><td>Include</td><td>Toggle to include/exclude from grand total</td></tr></tbody></table>
     </div>
     <div class="section" id="s2">
       <div class="section-num">2</div>
       <h2 class="section-title">Edit rates, coins, and copay</h2>
-      <p>Click any editable field (Allowed/Unit, Coins, Copay) to edit directly, the same way as adjusting quantity. Use this to correct contracted rates or fix coinsurance percentages returned incorrectly by the payer.</p><img src="assets/images/h8/02-edit-allowed.png" alt="Editing allowed amount field inline" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>Click any editable field (Allowed/Unit, Coins, Copay) to edit directly, the same way as adjusting quantity. Use this to correct contracted rates or fix coinsurance percentages returned incorrectly by the payer.</p><img src="assets/images/vob/h8/02-edit-allowed.png" alt="Editing allowed amount field inline" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s3">
       <div class="section-num">3</div>
       <h2 class="section-title">Reorder services (drag and drop)</h2>
-      <p>Drag the handle on the left of any row to reorder treatments. The deductible is applied <strong>top to bottom</strong> &mdash; the first treatment exhausts deductible before it carries to the next. Order affects patient cost.</p><img src="assets/images/h8/03-drag-reorder.png" alt="Drag handles visible &mdash; reordering CPT rows" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><div class="callout info"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div class="callout-body"><div class="callout-title">Ordering tip</div>Reorder to match the expected claims processing order from the payer. If immunotherapy is typically billed before office visits, put it first.</div></div>
+      <p>Drag the handle on the left of any row to reorder treatments. The deductible is applied <strong>top to bottom</strong> &mdash; the first treatment exhausts deductible before it carries to the next. Order affects patient cost.</p><img src="assets/images/vob/h8/03-drag-reorder.png" alt="Drag handles visible &mdash; reordering CPT rows" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><div class="callout info"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div class="callout-body"><div class="callout-title">Ordering tip</div>Reorder to match the expected claims processing order from the payer. If immunotherapy is typically billed before office visits, put it first.</div></div>
     </div>
     <div class="section" id="s4">
       <div class="section-num">4</div>
       <h2 class="section-title">Include / exclude from grand total</h2>
-      <p>Use the <strong>Include toggle</strong> on the right of each row to exclude a CPT from the grand total. Excluded codes appear as <strong>Bill Per Visit</strong> items in the summary &mdash; quoted separately.</p><img src="assets/images/h8/04-include-exclude.png" alt="Include toggle off &mdash; CPT showing as Bill Per Visit in summary" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>Use the <strong>Include toggle</strong> on the right of each row to exclude a CPT from the grand total. Excluded codes appear as <strong>Bill Per Visit</strong> items in the summary &mdash; quoted separately.</p><img src="assets/images/vob/h8/04-include-exclude.png" alt="Include toggle off &mdash; CPT showing as Bill Per Visit in summary" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s5">
       <div class="section-num">5</div>
@@ -795,22 +860,22 @@ ul.bullet-list li strong{color:var(--text-primary);}
     <div class="section" id="s1">
       <div class="section-num">1</div>
       <h2 class="section-title">Add CPT 95180</h2>
-      <p>In either Doctor View or Staff Edit, search for and add CPT 95180 to the treatment list. The bottom of the calculator automatically expands to show three build type comparison cards.</p><img src="assets/images/h9/01-build-type-cards.png" alt="Grand total area &mdash; Rush, Cluster, and Conventional build type cards side by side" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>In either Doctor View or Staff Edit, search for and add CPT 95180 to the treatment list. The bottom of the calculator automatically expands to show three build type comparison cards.</p><img src="assets/images/vob/h9/01-build-type-cards.png" alt="Grand total area &mdash; Rush, Cluster, and Conventional build type cards side by side" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s2">
       <div class="section-num">2</div>
       <h2 class="section-title">Select a build type (Doctor View)</h2>
-      <p>In Doctor View, use the dropdown on the 95180 treatment row to select the build type for that patient.</p><img src="assets/images/h9/02-doctor-view-dropdown.png" alt="Doctor View &mdash; build type dropdown on 95180 row" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>In Doctor View, use the dropdown on the 95180 treatment row to select the build type for that patient.</p><img src="assets/images/vob/h9/02-doctor-view-dropdown.png" alt="Doctor View &mdash; build type dropdown on 95180 row" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s3">
       <div class="section-num">3</div>
       <h2 class="section-title">Select a build type (Staff View)</h2>
-      <p>In Staff Edit, the same dropdown is available. Build type selection is reflected in the cost calculations across all columns.</p><img src="assets/images/h9/03-staff-view-dropdown.png" alt="Staff View &mdash; build type dropdown on 95180 row" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>In Staff Edit, the same dropdown is available. Build type selection is reflected in the cost calculations across all columns.</p><img src="assets/images/vob/h9/03-staff-view-dropdown.png" alt="Staff View &mdash; build type dropdown on 95180 row" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s4">
       <div class="section-num">4</div>
       <h2 class="section-title">Check or uncheck build type cards</h2>
-      <p>Use the check/uncheck controls on the build type comparison cards to show or hide specific options. Deselect build types the patient isn&rsquo;t eligible for or that aren&rsquo;t being offered.</p><img src="assets/images/h9/04-check-uncheck-cards.png" alt="Build type cards &mdash; check and uncheck to include or exclude from summary" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><table class='status-table'><thead><tr><th>Build type</th><th>Visits</th><th>Notes</th></tr></thead><tbody><tr><td><strong>Rush Build</strong></td><td>~1 visit</td><td>Fastest. Highest billed amount per visit.</td></tr><tr><td><strong>Cluster Build</strong></td><td>~4 visits</td><td>Intermediate pace.</td></tr><tr><td><strong>Conventional Build</strong></td><td>~26 visits</td><td>Standard schedule. Insurance pays most.</td></tr></tbody></table>
+      <p>Use the check/uncheck controls on the build type comparison cards to show or hide specific options. Deselect build types the patient isn&rsquo;t eligible for or that aren&rsquo;t being offered.</p><img src="assets/images/vob/h9/04-check-uncheck-cards.png" alt="Build type cards &mdash; check and uncheck to include or exclude from summary" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><table class='status-table'><thead><tr><th>Build type</th><th>Visits</th><th>Notes</th></tr></thead><tbody><tr><td><strong>Rush Build</strong></td><td>~1 visit</td><td>Fastest. Highest billed amount per visit.</td></tr><tr><td><strong>Cluster Build</strong></td><td>~4 visits</td><td>Intermediate pace.</td></tr><tr><td><strong>Conventional Build</strong></td><td>~26 visits</td><td>Standard schedule. Insurance pays most.</td></tr></tbody></table>
     </div>
     <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h7');return false;">
           <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
@@ -842,17 +907,17 @@ ul.bullet-list li strong{color:var(--text-primary);}
     <div class="section" id="s1">
       <div class="section-num">1</div>
       <h2 class="section-title">Authorize and save</h2>
-      <p>Scroll to the bottom of the Cost Calculator and click <strong>Authorize &amp; Save Plan</strong>. This finalizes the treatment list and build type selection.</p><img src="assets/images/h10a/01-authorize-save.png" alt="Authorize and Save Plan button &mdash; estimated grand total section" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>Scroll to the bottom of the Cost Calculator and click <strong>Authorize &amp; Save Plan</strong>. This finalizes the treatment list and build type selection.</p><img src="assets/images/vob/h10a/01-authorize-save.png" alt="Authorize and Save Plan button &mdash; estimated grand total section" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s2">
       <div class="section-num">2</div>
       <h2 class="section-title">Click Print</h2>
-      <p>Click the <strong>Print</strong> button in the top right of the Cost Calculator (visible in both Doctor View and Staff Edit). A Print Preview modal opens.</p><img src="assets/images/h10a/02-print-button.png" alt="Print button location &mdash; top action bar" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
+      <p>Click the <strong>Print</strong> button in the top right of the Cost Calculator (visible in both Doctor View and Staff Edit). A Print Preview modal opens.</p><img src="assets/images/vob/h10a/02-print-button.png" alt="Print button location &mdash; top action bar" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;">
     </div>
     <div class="section" id="s3">
       <div class="section-num">3</div>
       <h2 class="section-title">Review and print</h2>
-      <p>The Print Preview shows the <strong>Benefit Estimation Report</strong>. Verify the contents before printing.</p><img src="assets/images/h10a/03-print-preview.png" alt="Print Preview modal &mdash; Benefit Estimation Report" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><p>The report includes: Carrier and Plan Type, Coinsurance and Specialist Copay, Deductible Status (Individual/Family remaining), OOP Status, Coverage Details &amp; Requirements (Prior Auth, Referral, Pre-existing limitations), Recommended Services table with patient-owed costs, and Build type comparison (Rush/Cluster/Conventional) at the bottom.</p><ul class='bullet-list'><li>Click <strong>Print</strong> to send to a connected printer.</li><li>Click <strong>Download PDF</strong> to save locally.</li></ul>
+      <p>The Print Preview shows the <strong>Benefit Estimation Report</strong>. Verify the contents before printing.</p><img src="assets/images/vob/h10a/03-print-preview.png" alt="Print Preview modal &mdash; Benefit Estimation Report" style="width:100%;max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:18px 0;"><p>The report includes: Carrier and Plan Type, Coinsurance and Specialist Copay, Deductible Status (Individual/Family remaining), OOP Status, Coverage Details &amp; Requirements (Prior Auth, Referral, Pre-existing limitations), Recommended Services table with patient-owed costs, and Build type comparison (Rush/Cluster/Conventional) at the bottom.</p><ul class='bullet-list'><li>Click <strong>Print</strong> to send to a connected printer.</li><li>Click <strong>Download PDF</strong> to save locally.</li></ul>
     </div>
     <div class="related-section"><div class="related-label">Related articles</div><div class="related-grid"><a href="#" class="related-card" onclick="showArticle('h7');return false;">
           <div class="related-card-icon howto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
@@ -1301,6 +1366,17 @@ ul.bullet-list li strong{color:var(--text-primary);}
       </tbody>
     </table>
     </div></div>
+<!-- ==========================================
+     END VOB AGENT: Article content
+     ========================================== -->
+
+<!-- ==========================================
+     PRIOR AUTH AGENT: Article content
+     Prior Auth article divs will be added here.
+     Each article follows the same .article[data-id="..."] pattern.
+     Add sidebar links above (in <aside>) when adding content here.
+     ========================================== -->
+
 </main>
 </div>
 <script>
@@ -1334,18 +1410,39 @@ function toggleSection(labelEl) {
   labelEl.parentElement.classList.toggle('collapsed');
 }
 
+function showAgentSelector() {
+  document.getElementById('agent-selector').style.display = 'block';
+  document.getElementById('main-layout').style.display = 'none';
+}
+
+function selectAgent(agent) {
+  if (agent !== 'vob') return;
+  document.getElementById('agent-selector').style.display = 'none';
+  document.getElementById('main-layout').style.display = '';
+  showArticle('h0');
+}
+
 // Hash-aware routing: navigate to article on load, handle browser back/forward
 document.addEventListener('DOMContentLoaded', function() {
   if (localStorage.getItem('ragaai_docs_auth') !== '1') return;
   var hash = location.hash.replace('#', '').trim();
-  var target = (hash && _validArticleIds.indexOf(hash) !== -1) ? hash : 'h0';
-  showArticle(target, true);
+  if (hash && _validArticleIds.indexOf(hash) !== -1) {
+    document.getElementById('agent-selector').style.display = 'none';
+    document.getElementById('main-layout').style.display = '';
+    showArticle(hash, true);
+  } else {
+    showAgentSelector();
+  }
 });
 
 window.addEventListener('popstate', function() {
   if (localStorage.getItem('ragaai_docs_auth') !== '1') return;
   var hash = location.hash.replace('#', '').trim();
-  if (hash && _validArticleIds.indexOf(hash) !== -1) showArticle(hash, true);
+  if (hash && _validArticleIds.indexOf(hash) !== -1) {
+    document.getElementById('agent-selector').style.display = 'none';
+    document.getElementById('main-layout').style.display = '';
+    showArticle(hash, true);
+  }
 });
 </script>
 
@@ -1495,10 +1592,15 @@ window.addEventListener('popstate', function() {
     if (ok) {
       localStorage.setItem(AUTH_KEY, '1');
       showApp();
-      // Navigate to the article they originally requested, or default to h0
-      var redirect = sessionStorage.getItem(REDIRECT_KEY) || 'h0';
+      var redirect = sessionStorage.getItem(REDIRECT_KEY) || '';
       sessionStorage.removeItem(REDIRECT_KEY);
-      if (typeof showArticle === 'function') showArticle(redirect, true);
+      if (redirect && typeof showArticle === 'function') {
+        document.getElementById('agent-selector').style.display = 'none';
+        document.getElementById('main-layout').style.display = '';
+        showArticle(redirect, true);
+      } else {
+        showAgentSelector();
+      }
     } else {
       var card = document.getElementById('login-card');
       var err = document.getElementById('login-error');

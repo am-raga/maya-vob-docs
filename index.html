@@ -33,7 +33,17 @@ code{font-family:var(--mono);font-size:12.5px;background:var(--surface-soft);pad
 .topbar-home{display:flex;align-items:center;gap:0;cursor:pointer;border-radius:6px;transition:opacity .15s;padding:2px 4px 2px 0;}
 .topbar-home:hover{opacity:.7;}
 .topbar-agent-sep{color:var(--border-strong);font-size:16px;margin:0 2px;user-select:none;flex-shrink:0;}
-.topbar-agent-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px 3px 8px;border-radius:100px;background:var(--brand-soft);color:var(--brand-text);font-size:11.5px;font-weight:600;border:1px solid #BFDBFE;white-space:nowrap;flex-shrink:0;}
+.topbar-agent-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px 3px 8px;border-radius:100px;background:var(--brand-soft);color:var(--brand-text);font-size:11.5px;font-weight:600;border:1px solid #BFDBFE;white-space:nowrap;flex-shrink:0;cursor:pointer;user-select:none;}
+.topbar-agent-pill:hover{background:#DBEAFE;border-color:#93C5FD;}
+.agent-switcher-wrap{position:relative;display:inline-flex;flex-shrink:0;}
+.agent-switcher-dropdown{position:absolute;top:calc(100% + 8px);left:0;min-width:210px;background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:0 8px 24px rgba(15,23,42,.12);z-index:600;overflow:hidden;}
+.agent-switcher-header{padding:6px 14px 5px;font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--text-muted);text-transform:uppercase;border-bottom:1px solid var(--border);}
+.agent-switcher-item{display:flex;align-items:center;gap:9px;padding:10px 14px;font-size:13px;cursor:pointer;color:var(--text-primary);transition:background .1s;}
+.agent-switcher-item:hover{background:var(--surface-soft);}
+.agent-switcher-item.current{font-weight:600;color:var(--brand-text);background:var(--brand-soft);}
+.agent-switcher-item.locked{opacity:.5;cursor:not-allowed;color:var(--text-muted);}
+.agent-switcher-item.locked:hover{background:transparent;}
+.agent-switcher-lock-badge{margin-left:auto;font-size:10px;font-weight:600;color:var(--text-muted);background:var(--surface-soft);border:1px solid var(--border);border-radius:4px;padding:1px 5px;}
 /* SEARCH */
 .topbar-search-wrap{position:relative;}
 .topbar-search{display:flex;align-items:center;gap:7px;padding:6px 11px;background:var(--surface-soft);border:1.5px solid var(--border);border-radius:var(--radius-sm);width:220px;transition:border-color .15s,width .2s,background .15s;}
@@ -268,9 +278,24 @@ ul.bullet-list li strong{color:var(--text-primary);}
       <span class="topbar-title">RagaAI Clinicops Usage Guides</span>
     </div>
     <span class="topbar-agent-sep" id="topbar-agent-sep" style="display:none;">/</span>
-    <div class="topbar-agent-pill" id="topbar-agent-pill" style="display:none;">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M20 6H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2z"/></svg>
-      <span id="topbar-agent-name"></span>
+    <div class="agent-switcher-wrap" id="agent-switcher-wrap" style="display:none;">
+      <div class="topbar-agent-pill" id="topbar-agent-pill" onclick="toggleAgentSwitcher(event)">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M20 6H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2z"/></svg>
+        <span id="topbar-agent-name"></span>
+        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.7;margin-left:1px;"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="agent-switcher-dropdown" id="agent-switcher-dropdown" style="display:none;">
+        <div class="agent-switcher-header">Switch agent</div>
+        <div class="agent-switcher-item current" onclick="closeAgentSwitcher();showAgentSelector();selectAgent('vob')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Insurance Verification
+        </div>
+        <div class="agent-switcher-item locked">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Prior Auth
+          <span class="agent-switcher-lock-badge">Coming soon</span>
+        </div>
+      </div>
     </div>
   </div>
   <div class="topbar-right">
@@ -1423,7 +1448,7 @@ ul.bullet-list li strong{color:var(--text-primary);}
 <script>
 var _validArticleIds = ['t1','h0','h1','h2a','h2b','h3','h4','h5','h6','h7','h8','h9','h10a','h10b','r1','r2','r3','r4','r5','e1','e2','e3','a1','a2','a3'];
 var _currentAgent = null;
-var _agentLabels = {'vob': 'Insurance VOB', 'prior-auth': 'Prior Auth'};
+var _agentLabels = {'vob': 'Insurance Verification', 'prior-auth': 'Prior Auth'};
 var _searchIndex = [];
 
 // Parse URL hash: #vob/t1 → {agent:'vob', id:'t1'}; #t1 → {agent:null, id:'t1'}
@@ -1484,21 +1509,33 @@ function selectAgent(agent) {
 }
 
 function updateTopbar(agent) {
-  var pill = document.getElementById('topbar-agent-pill');
+  var switcherWrap = document.getElementById('agent-switcher-wrap');
   var sep = document.getElementById('topbar-agent-sep');
   var name = document.getElementById('topbar-agent-name');
   var searchWrap = document.getElementById('topbar-search-wrap');
+  closeAgentSwitcher();
   if (agent && _agentLabels[agent]) {
     name.textContent = _agentLabels[agent];
-    pill.style.display = '';
+    switcherWrap.style.display = '';
     sep.style.display = '';
     searchWrap.style.display = '';
   } else {
-    pill.style.display = 'none';
+    switcherWrap.style.display = 'none';
     sep.style.display = 'none';
     searchWrap.style.display = 'none';
     closeSearch();
   }
+}
+
+function toggleAgentSwitcher(e) {
+  if (e) e.stopPropagation();
+  var dd = document.getElementById('agent-switcher-dropdown');
+  dd.style.display = dd.style.display === 'none' ? '' : 'none';
+}
+
+function closeAgentSwitcher() {
+  var dd = document.getElementById('agent-switcher-dropdown');
+  if (dd) dd.style.display = 'none';
 }
 
 function buildSearchIndex() {
@@ -1590,8 +1627,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   document.addEventListener('click', function(e) {
-    var wrap = document.getElementById('topbar-search-wrap');
-    if (wrap && !wrap.contains(e.target)) closeSearch();
+    var searchWrap = document.getElementById('topbar-search-wrap');
+    if (searchWrap && !searchWrap.contains(e.target)) closeSearch();
+    var switcherWrap = document.getElementById('agent-switcher-wrap');
+    if (switcherWrap && !switcherWrap.contains(e.target)) closeAgentSwitcher();
   });
 
   if (localStorage.getItem('ragaai_docs_auth') !== '1') return;

@@ -25,10 +25,35 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text-primary);line
 a{color:var(--brand);text-decoration:none;}a:hover{text-decoration:underline;}
 code{font-family:var(--mono);font-size:12.5px;background:var(--surface-soft);padding:1px 6px;border-radius:4px;color:var(--text-primary);}
 /* TOPBAR */
-.topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;}
-.topbar-left{display:flex;align-items:center;gap:16px;}
-.brand-logo-img{height:36px;width:auto;display:block;}
-.topbar-title{font-size:15px;font-weight:700;color:var(--text-primary);padding-left:16px;border-left:1px solid var(--border);}
+.topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.topbar-left{display:flex;align-items:center;gap:10px;min-width:0;}
+.topbar-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.brand-logo-img{height:34px;width:auto;display:block;flex-shrink:0;}
+.topbar-title{font-size:15px;font-weight:700;color:var(--text-primary);padding-left:14px;border-left:1px solid var(--border);white-space:nowrap;}
+.topbar-home{display:flex;align-items:center;gap:0;cursor:pointer;border-radius:6px;transition:opacity .15s;padding:2px 4px 2px 0;}
+.topbar-home:hover{opacity:.7;}
+.topbar-agent-sep{color:var(--border-strong);font-size:16px;margin:0 2px;user-select:none;flex-shrink:0;}
+.topbar-agent-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px 3px 8px;border-radius:100px;background:var(--brand-soft);color:var(--brand-text);font-size:11.5px;font-weight:600;border:1px solid #BFDBFE;white-space:nowrap;flex-shrink:0;}
+/* SEARCH */
+.topbar-search-wrap{position:relative;}
+.topbar-search{display:flex;align-items:center;gap:7px;padding:6px 11px;background:var(--surface-soft);border:1.5px solid var(--border);border-radius:var(--radius-sm);width:220px;transition:border-color .15s,width .2s,background .15s;}
+.topbar-search:focus-within{border-color:var(--brand);background:#fff;width:300px;}
+.topbar-search svg{color:var(--text-muted);flex-shrink:0;}
+.topbar-search input{border:none;background:transparent;outline:none;font-size:13px;font-family:var(--sans);color:var(--text-primary);width:100%;}
+.topbar-search input::placeholder{color:var(--text-muted);}
+.search-results{position:absolute;top:calc(100% + 8px);right:0;width:460px;background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:0 8px 32px rgba(15,23,42,.13);z-index:500;overflow:hidden;max-height:480px;overflow-y:auto;}
+.search-results-header{padding:7px 14px;font-size:10.5px;font-weight:700;color:var(--text-muted);letter-spacing:.5px;text-transform:uppercase;border-bottom:1px solid var(--border);background:var(--surface-soft);}
+.search-result-card{display:flex;flex-direction:column;gap:3px;padding:11px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;}
+.search-result-card:last-child{border-bottom:none;}
+.search-result-card:hover{background:var(--brand-soft);}
+.src-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:1px;}
+.src-kicker{font-size:10px;font-weight:700;color:var(--text-muted);letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;}
+.src-title{font-size:13.5px;font-weight:600;color:var(--text-primary);}
+.src-section{font-size:11.5px;color:var(--text-muted);margin-bottom:2px;}
+.src-snippet{font-size:12.5px;color:var(--text-secondary);line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.src-snippet mark{background:rgba(59,130,246,.15);color:var(--brand-text);border-radius:2px;padding:0 2px;font-weight:500;}
+.search-no-results{padding:24px 14px;text-align:center;font-size:13px;color:var(--text-muted);}
+@media(max-width:900px){.topbar-right{display:none;}.topbar-agent-pill{display:none;}.topbar-agent-sep{display:none;}}
 /* LAYOUT */
 .layout{display:grid;grid-template-columns:280px 1fr;max-width:1300px;margin:0 auto;}
 /* SIDEBAR */
@@ -238,8 +263,24 @@ ul.bullet-list li strong{color:var(--text-primary);}
 
 <header class="topbar">
   <div class="topbar-left">
-    <img src="assets/logo/maya-vob-logo.png" alt="RagaAI Clinical Ops" class="brand-logo-img" onerror="this.style.display='none'">
-    <span class="topbar-title">RagaAI Clinicops Usage Guides</span>
+    <div class="topbar-home" onclick="showAgentSelector()" title="Back to agent selector">
+      <img src="assets/logo/maya-vob-logo.png" alt="RagaAI Clinical Ops" class="brand-logo-img" onerror="this.style.display='none'">
+      <span class="topbar-title">RagaAI Clinicops Usage Guides</span>
+    </div>
+    <span class="topbar-agent-sep" id="topbar-agent-sep" style="display:none;">/</span>
+    <div class="topbar-agent-pill" id="topbar-agent-pill" style="display:none;">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M20 6H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2z"/></svg>
+      <span id="topbar-agent-name"></span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-search-wrap" id="topbar-search-wrap" style="display:none;">
+      <div class="topbar-search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="search-input" placeholder="Search this guide…" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="search-results" id="search-results" style="display:none;"></div>
+    </div>
   </div>
 </header>
 <div class="layout" id="main-layout">
@@ -1382,6 +1423,8 @@ ul.bullet-list li strong{color:var(--text-primary);}
 <script>
 var _validArticleIds = ['t1','h0','h1','h2a','h2b','h3','h4','h5','h6','h7','h8','h9','h10a','h10b','r1','r2','r3','r4','r5','e1','e2','e3','a1','a2','a3'];
 var _currentAgent = null;
+var _agentLabels = {'vob': 'Insurance VOB', 'prior-auth': 'Prior Auth'};
+var _searchIndex = [];
 
 // Parse URL hash: #vob/t1 → {agent:'vob', id:'t1'}; #t1 → {agent:null, id:'t1'}
 function parseHash() {
@@ -1427,6 +1470,8 @@ function showAgentSelector() {
   _currentAgent = null;
   document.getElementById('agent-selector').style.display = 'block';
   document.getElementById('main-layout').style.display = 'none';
+  history.pushState(null, '', location.pathname);
+  updateTopbar(null);
 }
 
 function selectAgent(agent) {
@@ -1434,18 +1479,130 @@ function selectAgent(agent) {
   _currentAgent = 'vob';
   document.getElementById('agent-selector').style.display = 'none';
   document.getElementById('main-layout').style.display = '';
-  showArticle('t1'); // lands on Get Started, pushes #vob/t1
+  updateTopbar('vob');
+  showArticle('t1');
+}
+
+function updateTopbar(agent) {
+  var pill = document.getElementById('topbar-agent-pill');
+  var sep = document.getElementById('topbar-agent-sep');
+  var name = document.getElementById('topbar-agent-name');
+  var searchWrap = document.getElementById('topbar-search-wrap');
+  if (agent && _agentLabels[agent]) {
+    name.textContent = _agentLabels[agent];
+    pill.style.display = '';
+    sep.style.display = '';
+    searchWrap.style.display = '';
+  } else {
+    pill.style.display = 'none';
+    sep.style.display = 'none';
+    searchWrap.style.display = 'none';
+    closeSearch();
+  }
+}
+
+function buildSearchIndex() {
+  _searchIndex = [];
+  var articles = document.querySelectorAll('.article[data-id]');
+  articles.forEach(function(art) {
+    var id = art.getAttribute('data-id');
+    var titleEl = art.querySelector('h1,h2,.article-title');
+    var title = titleEl ? titleEl.textContent.trim() : id;
+    var sectionEl = art.closest('.sidebar-section, [data-section]');
+    var section = '';
+    if (sectionEl) {
+      var labelEl = sectionEl.querySelector('.sidebar-section-label span:not(.chevron),.sidebar-section-label .dot ~ *');
+      if (!labelEl) labelEl = sectionEl.querySelector('.sidebar-section-label');
+      if (labelEl) section = labelEl.textContent.replace(/[▶▼]/g,'').trim();
+    }
+    var fullText = art.textContent || '';
+    _searchIndex.push({id: id, title: title, section: section, text: fullText});
+  });
+}
+
+function _escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function _makeSnippet(text, query) {
+  var q = query.toLowerCase();
+  var idx = text.toLowerCase().indexOf(q);
+  if (idx === -1) return '';
+  var start = Math.max(0, idx - 60);
+  var end = Math.min(text.length, idx + query.length + 100);
+  var snippet = (start > 0 ? '…' : '') + text.slice(start, end).trim() + (end < text.length ? '…' : '');
+  var safeSnippet = _escHtml(snippet);
+  var safeQ = _escHtml(query);
+  var re = new RegExp('(' + safeQ.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
+  return safeSnippet.replace(re, '<mark>$1</mark>');
+}
+
+function closeSearch() {
+  var input = document.getElementById('search-input');
+  var results = document.getElementById('search-results');
+  if (input) input.value = '';
+  if (results) results.style.display = 'none';
+}
+
+function renderSearchResults(query) {
+  var results = document.getElementById('search-results');
+  if (!results) return;
+  var q = query.trim();
+  if (!q) { results.style.display = 'none'; return; }
+  var matches = [];
+  for (var i = 0; i < _searchIndex.length; i++) {
+    var entry = _searchIndex[i];
+    if (entry.text.toLowerCase().indexOf(q.toLowerCase()) !== -1 ||
+        entry.title.toLowerCase().indexOf(q.toLowerCase()) !== -1) {
+      matches.push(entry);
+    }
+    if (matches.length >= 8) break;
+  }
+  if (!matches.length) {
+    results.innerHTML = '<div class="search-no-results">No results for <strong>' + _escHtml(q) + '</strong></div>';
+    results.style.display = 'block';
+    return;
+  }
+  var html = '<div class="search-results-header">' + matches.length + ' result' + (matches.length !== 1 ? 's' : '') + '</div>';
+  matches.forEach(function(m) {
+    var snippet = _makeSnippet(m.text, q);
+    html += '<div class="search-result-card" onclick="closeSearch();showArticle(\'' + m.id + '\')">' +
+      '<div class="src-top">' +
+        (m.section ? '<span class="src-kicker">' + _escHtml(m.section) + '</span>' : '') +
+        '<span class="src-title">' + _escHtml(m.title) + '</span>' +
+      '</div>' +
+      (snippet ? '<div class="src-snippet">' + snippet + '</div>' : '') +
+    '</div>';
+  });
+  results.innerHTML = html;
+  results.style.display = 'block';
 }
 
 // Hash-aware routing: supports #vob/t1 (new) and #t1 (legacy — treated as vob)
 document.addEventListener('DOMContentLoaded', function() {
+  var searchInput = document.getElementById('search-input');
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      renderSearchResults(this.value);
+    });
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeSearch();
+    });
+  }
+  document.addEventListener('click', function(e) {
+    var wrap = document.getElementById('topbar-search-wrap');
+    if (wrap && !wrap.contains(e.target)) closeSearch();
+  });
+
   if (localStorage.getItem('ragaai_docs_auth') !== '1') return;
+  buildSearchIndex();
   var parsed = parseHash();
   var id = parsed.id;
   if (id && _validArticleIds.indexOf(id) !== -1) {
     _currentAgent = parsed.agent || 'vob';
     document.getElementById('agent-selector').style.display = 'none';
     document.getElementById('main-layout').style.display = '';
+    updateTopbar(_currentAgent);
     showArticle(id, true);
   } else {
     showAgentSelector();
@@ -1460,6 +1617,7 @@ window.addEventListener('popstate', function() {
     _currentAgent = parsed.agent || 'vob';
     document.getElementById('agent-selector').style.display = 'none';
     document.getElementById('main-layout').style.display = '';
+    updateTopbar(_currentAgent);
     showArticle(id, true);
   } else {
     showAgentSelector();
@@ -1618,6 +1776,7 @@ window.addEventListener('popstate', function() {
     if (ok) {
       localStorage.setItem(AUTH_KEY, '1');
       showApp();
+      buildSearchIndex();
       var redirect = sessionStorage.getItem(REDIRECT_KEY) || '';
       sessionStorage.removeItem(REDIRECT_KEY);
       if (redirect && typeof _validArticleIds !== 'undefined') {
@@ -1628,6 +1787,7 @@ window.addEventListener('popstate', function() {
           _currentAgent = _rAgent;
           document.getElementById('agent-selector').style.display = 'none';
           document.getElementById('main-layout').style.display = '';
+          updateTopbar(_currentAgent);
           showArticle(_rId, true);
         } else {
           showAgentSelector();
